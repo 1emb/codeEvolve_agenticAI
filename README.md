@@ -4,6 +4,53 @@ This package contains the problem code, the best evolved program, the raw run
 outputs and the instructions to reproduce the `gc_fixedk` experiment
 (run finished 2026-10-21, 4 h 43 min, 10 islands, 152 epochs).
 
+## 0. Read this first: what this experiment is and is not
+
+* **The LLM did not invent a colouring algorithm.** It was given the classic
+  TabuCol search (Hertz and de Werra, 1987) and could only rewrite its two
+  decision rules, `select_move` and `tenure`. The search loop, start colouring,
+  data structures and stopping rule are fixed code the LLM never saw as editable.
+  The honest description of the result is "LLM-tuned TabuCol rules", not
+  "LLM-discovered heuristic".
+* **The training targets were calibrated to the seed.** The target k for each
+  graph was chosen with `code/calibrate_fixedk.py` as the smallest k at which
+  the seed rules fail by only 1 to 10 conflicts. This gives the search a usable
+  gradient, but it also means a small tweak to the seed looks like a large gain
+  on the training fitness. Training fitness is not comparable to any published
+  number.
+* **The LLM was given hints.** The system prompt in
+  `problem/gc_fixedk/config_qwen.yaml` lists known ideas (reactive tenure,
+  random tie-breaking, sampling non-best moves, diversification). The evolved
+  program uses those ideas. This is guidance from the literature, not discovery.
+* **The seed is a deliberately plain baseline.** It is the 1987 rule set without
+  random tie-breaking or reactive tenure. A properly tuned TabuCol would likely
+  match the evolved rules, so part of the measured gain comes from the seed
+  being weak.
+* **The gain does not transfer.** On the held-out test (section 5.2) the evolved
+  rules save one colour on one graph, lose one colour on another, and tie
+  elsewhere. In aggregate they are no better than the seed.
+* **Nothing here approaches the state of the art.** Best-known DIMACS values
+  (47 on DSJC500.5, 82 on DSJC1000.5) come from memetic algorithms such as HEAD
+  running for hours in compiled code. This 60 s Python TabuCol lands at 52 and
+  93, at the bottom of the published range, with or without the evolved rules.
+* **The design was not taken from a published graph-colouring result.** It
+  adapts the style of the Evolution of Heuristics paper (Liu et al., ICML 2024),
+  which evaluated bin packing, TSP and flow shop, not graph colouring. We know of
+  no published LLM-evolution result on DIMACS colouring to compare with.
+* **The two earlier whole-program runs were weaker still.** DSJC125.5 run1
+  started from DSATUR greedy only (the LLM added its own tabu search, reaching
+  21 colours vs 17 best known). gc_train3 run1 started from DSATUR + TabuCol
+  and reached 29/26/52 vs 28/25/47. The switch to the fixed-framework setup was
+  made because of those results, which narrowed the research question.
+* **The best evolved program has two defects** (section 6): it uses unseeded
+  `numpy.random` instead of the supplied `rng`, and one of its branches is dead
+  code. The scored behaviour is what is in the file, not what its comments say.
+
+What is solid: the pipeline runs end to end, the training evaluation is
+deterministic and independently verifies every reported colouring, every
+colour count in the held-out table is a verified conflict-free colouring, and
+every island beat the seed on the training objective.
+
 ## 1. What the experiment does
 
 CodeEvolve (inter-co/science-codeevolve v0.3.1, arXiv 2510.14150) is an
@@ -46,8 +93,9 @@ code/                            all problem code (nothing here is upstream Code
   heldout_hooks.py               held-out test: colours used under a wall-clock limit
   run.sh                         launches CodeEvolve on a problem directory
   serve_qwen.sh                  starts the vLLM server
-  make_problem.py, evaluate.py, evaluate_multi.py, make_problem_multi.py,
-  init_program.py, init_tabucol.py   earlier whole-program variants (not used by gc_fixedk)
+  make_problem.py, evaluate.py, init_program.py      DSJC125.5 run1: whole program, seed = DSATUR only
+  make_problem_multi.py, evaluate_multi.py, init_tabucol.py   gc_train3 run1: whole program, seed = DSATUR + TabuCol
+                                     (neither is used by gc_fixedk)
 problem/gc_fixedk/               the assembled problem directory that was run
   input/evaluate.py, scoring.py, tabucol_framework.py, problem.json, graphs/*.col, src/init_program.py
   config_qwen.yaml               CodeEvolve config incl. system prompt
@@ -181,6 +229,21 @@ DSJC500.5  (47)      51         52
 DSJC1000.5 (82)      93         93
 ```
 
+### 5.3 Against the state of the art (60 s per graph, verified conflict-free colourings)
+
+| graph      | best known | seed TabuCol | evolved rules | published range for other methods |
+|------------|------------|--------------|---------------|-----------------------------------|
+| DSJC125.5  | 17         | 17           | 17            | solved by everything              |
+| DSJC250.5  | 28         | 29           | 29            | 28 is routine for memetic methods |
+| le450_25c  | 25         | 27           | 26            | 25 for most memetic methods       |
+| DSJC500.5  | 47 (HEAD)  | 51           | 52            | 48 to 52                          |
+| DSJC1000.5 | 82 (HEAD)  | 93           | 93            | 82 to 94                          |
+
+Sources: Moalic and Gondran, "The new memetic algorithm HEAD for graph
+coloring", EvoCOP 2015 / arXiv 1401.2184; Zheng et al., arXiv 2109.05948
+(notes that 47 on DSJC500.5 is reached only occasionally and with tuned
+parameters); comparison table in arXiv 2303.09632.
+
 ## 6. How to interpret the results
 
 * **The evolution worked on its own objective.** Fitness went from -5.33 to
@@ -214,6 +277,15 @@ Two defects in the best evolved program to keep in mind:
    scored is what is in the file, not what the comments claim.
 
 ## 7. Suggested next step
+
+The project owner's stated goal is to evolve a whole colouring program, not
+TabuCol rules. The gc_fixedk setup does not meet that goal and should be read
+as a pipeline test. A whole-program run needs a decision on the seed
+(DSATUR-only is closest to "from scratch"; DSATUR + TabuCol is more likely to
+reach best-known values), a budget-independent objective, and several hundred
+epochs.
+
+For the fixed-framework setup itself:
 
 Evaluate each candidate on several seeded start colourings or two iteration
 budgets, so the rules cannot overfit one search trajectory, and add a
