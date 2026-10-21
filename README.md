@@ -1,8 +1,10 @@
-# CodeEvolve for graph colouring: evolving TabuCol decision rules
+# CodeEvolve for graph colouring
 
-This package contains the problem code, the best evolved program, the raw run
-outputs and the instructions to reproduce the `gc_fixedk` experiment
-(run finished 2026-10-21, 4 h 43 min, 10 islands, 152 epochs).
+Two experiments. Sections 0 to 7 cover the finished `gc_fixedk` run, in which
+the LLM could only edit two decision rules of a fixed TabuCol search (run
+finished 2026-10-21, 4 h 43 min, 10 islands, 152 epochs). Section 8 covers the
+`gc_full` run, in which the LLM edits the whole colouring program; it is in
+progress and has no results yet.
 
 ## 0. Read this first: what this experiment is and is not
 
@@ -106,7 +108,13 @@ code/                            all problem code (nothing here is upstream Code
   run.sh                         launches CodeEvolve on a problem directory
   serve_qwen.sh                  starts the vLLM server
   make_problem.py                shared helpers: best-known table, graph download, yaml writer
-problem/gc_fixedk/               the assembled problem directory that was run
+  evaluate_multi.py              experiment 2 evaluator: whole program, several graphs and seeds, parallel runs
+  make_problem_multi.py          experiment 2 problem builder (hint-free prompt)
+  init_program.py                experiment 2 seed: DSATUR greedy only
+  init_tabucol.py                DSATUR + TabuCol reference program for the held-out comparison (not a seed)
+  heldout_program.py             held-out test for whole programs, several seeds, verified colourings
+problem/gc_full/                 experiment 2 problem directory (section 8)
+problem/gc_fixedk/               experiment 1 problem directory, the one that was run
   input/evaluate.py, scoring.py, tabucol_framework.py, problem.json, graphs/*.col, src/init_program.py
   config_qwen.yaml               CodeEvolve config incl. system prompt, regenerated without hints
 results/run1/
@@ -357,12 +365,56 @@ describe.
 
 ## 7. Suggested next step
 
-The next step is a whole-program run: the program receives a graph and a time
-limit and returns a colouring, with no target k prescribed. The gc_fixedk setup
-should be read as a pipeline test.
+The whole-program run is in progress; section 8 records its design. The
+gc_fixedk setup should be read as a pipeline test.
 
 For the fixed-framework setup itself: evaluate each candidate on several seeded
 start colourings or two iteration budgets, so the rules cannot overfit one
 search trajectory; add a reproducibility check (fail the evaluation if the
 program imports `numpy.random` or `random`); and run with the hint-free prompt
 now produced by the builder.
+
+## 8. Experiment 2: whole-program evolution, `gc_full` run1 (in progress)
+
+Launched 2026-10-21 at 17:00 MDT. No results yet. This section records the
+design before any result exists.
+
+What the LLM edits: the whole `color_graph(n, edges, time_limit)` function.
+Nothing about the algorithm is fixed.
+
+* **Starting program:** `code/init_program.py`, DSATUR greedy colouring only.
+  No tabu search, no local search of any kind. An earlier attempt from this
+  seed (not in this repository) reached 21 colours on DSJC125.5 against 17
+  best known, so matching the DSATUR + TabuCol reference below would already
+  be a success; reaching best-known values is unlikely.
+* **Prompt:** `problem/gc_full/config_qwen.yaml`, hint-free. It states the
+  contract, the graphs, the fitness and the limits, and names no algorithm.
+* **Training graphs and budget:** DSJC250.5, le450_25c, DSJC500.5, 10 s per
+  call.
+* **Evaluation seeds:** every graph is run 3 times. Seed 0 passes the graph as
+  given; seeds 1 and 2 pass an isomorphic copy (vertices relabelled at random,
+  edge order shuffled) and seed `random` and `numpy.random` accordingly. The
+  relabelling means a program with its own fixed random seed still gets three
+  different runs. A graph's gap is the mean over its 3 runs. This is the
+  response to the single-seed luck found in experiment 1 (section 5.4).
+* **Fitness:** minus the mean over graphs of the percentage gap to the
+  best-known colour count. 0 means best known matched everywhere. Invalid
+  colourings, crashes and timeouts get gaps worse than any valid colouring.
+* **Search settings:** 10 islands, 300 epochs each, otherwise the CodeEvolve
+  settings of experiment 1 (see `problem/gc_full/config_qwen.yaml`).
+* **Evaluator:** `code/evaluate_multi.py`. The 9 runs of one evaluation
+  execute in parallel single-threaded processes; CodeEvolve's limits are
+  120 s CPU time and 4 GB for the whole evaluation.
+
+Baselines on this evaluator, colours per seed, best known in parentheses:
+
+| program                                            | fitness | DSJC250.5 (28) | le450_25c (25) | DSJC500.5 (47) |
+|----------------------------------------------------|---------|----------------|----------------|----------------|
+| DSATUR seed (`code/init_program.py`)               | -28.02  | 37 / 36 / 36   | 29 / 29 / 29   | 65 / 64 / 66   |
+| DSATUR + TabuCol reference (`code/init_tabucol.py`) | -8.50   | 29 / 29 / 29   | 28 / 28 / 28   | 51 / 52 / 52   |
+
+When the run ends, `code/heldout_program.py` runs the best program, the seed
+and the reference on DSJC125.5, DSJC250.5, le450_25c, DSJC500.5, DSJC1000.5,
+queen8_8 and myciel5 at 10 s and 60 s with 3 seeds and verifies every
+colouring. The results will be added here with the same kind of caveats as
+section 0.

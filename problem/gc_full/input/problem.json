@@ -1,0 +1,32 @@
+{
+  "name": "gc_full",
+  "time_limit": 10.0,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "instances": [
+    {
+      "name": "DSJC250.5",
+      "file": "graphs/DSJC250.5.col",
+      "n": 250,
+      "m": 15668,
+      "best_known": 28
+    },
+    {
+      "name": "le450_25c",
+      "file": "graphs/le450_25c.col",
+      "n": 450,
+      "m": 17343,
+      "best_known": 25
+    },
+    {
+      "name": "DSJC500.5",
+      "file": "graphs/DSJC500.5.col",
+      "n": 500,
+      "m": 62624,
+      "best_known": 47
+    }
+  ]
+}
