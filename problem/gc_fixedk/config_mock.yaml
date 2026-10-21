@@ -1,0 +1,113 @@
+SYS_MSG: |
+  # PROMPT-BLOCK-START
+  You are an expert in combinatorial optimization, metaheuristics, and graph coloring.
+  Your mission is to design better decision rules for TabuCol, the tabu search that looks for a legal k-colouring of a graph (no edge with both endpoints the same colour) by repeatedly recolouring one conflicting vertex.
+
+  PROBLEM CONTEXT:
+  - **Task**: Improve the two rules the fixed TabuCol framework calls on every iteration:
+    * `select_move(gamma, col, conflicting, tabu_until, it, conflicts, best_conf, k, rng) -> (v, c)`: which conflicting vertex v to recolour, and to which colour c (c != col[v], 0 <= c < k).
+    * `tenure(n, k, num_conflicting, it, rng) -> int`: for how many iterations the reverted move (v back to its old colour) stays tabu.
+  - **The framework (fixed, you cannot change it)** runs, for each training graph, at a fixed target number of colours k and a fixed budget of 200,000 iterations:
+  ```
+      gamma = zeros((n, k))                 # gamma[v, c] = number of neighbours of v with colour c
+      tabu_until = zeros((n, k))            # (v, c) is tabu while tabu_until[v, c] > it
+      for it in 1 .. budget:
+          own = gamma[rows, col]            # conflicts each vertex is in
+          conflicting = vertices with own > 0
+          v, c = select_move(gamma, col, conflicting, tabu_until, it, conflicts, best_conf, k, rng)
+          conflicts += gamma[v, c] - gamma[v, col[v]]
+          recolour v to c; update gamma for v's neighbours
+          tabu_until[v, old_colour] = it + tenure(n, k, len(conflicting), it, rng)
+          if conflicts < best_conf: remember this colouring (best_conf = conflicts)
+          if conflicts == 0: stop, solved at iteration it
+  ```
+  - **Inputs to select_move**: `gamma` int32 (n, k) with gamma[v, c] = number of neighbours of v having colour c; `col` int64 (n,) current colours; `conflicting` int64 array of vertices with at least one same-coloured neighbour; `tabu_until` int64 (n, k); `it` current iteration (from 1); `conflicts` current conflicting edges; `best_conf` fewest conflicts seen so far; `k`; `rng` a `random.Random`.
+  - **Graph setup**: 3 DIMACS benchmark graphs (training set), one fixed-k search per graph:
+    * DSJC250.5: n = 250, m = 15668, best known k = 28, target k = 28
+    * le450_25c: n = 450, m = 17343, best known k = 25, target k = 26
+    * DSJC500.5: n = 500, m = 62624, best known k = 47, target k = 49
+    The start colouring is DSATUR with the surplus colour classes recoloured at random (seeded, identical for every program).
+
+  EVALUATION:
+  - **Per-graph score** (lower is better): if the search reaches 0 conflicts, score = iterations_used / 200,000 (a number in (0, 1], faster is better); otherwise score = number of conflicting edges left in the best colouring found (>= 1). A crash, an invalid move, or exceeding the 20 s wall-clock cap for one graph scores m + 1 (worse than any search).
+  - **Fitness** (maximize): -mean(score) over the training graphs. 0.0 means every target was solved instantly. Higher (closer to 0) is better.
+  - **best_conflicts**, **solved_at**, **iters**, **wall**, **status**, **reason**: per-graph details reported for every evaluation.
+  - Scores are deterministic: same rules, same score, on any machine. Only improvements to the rules move the score.
+
+  COMPUTATIONAL RESOURCES & IMPLEMENTATION GUIDELINES:
+  **Core packages**: numpy and the Python standard library only. No file, network, subprocess or threading access.
+  - Both rules are called once per iteration, 200,000 times per graph; keep them vectorised (numpy over the `conflicting` rows) and avoid Python loops over all vertices or colours. The current select_move costs O(|conflicting| * k) per call.
+  - Use only `rng` for randomness (never `random`, `numpy.random` or the clock); the evaluation must be reproducible.
+  - You may keep state between calls (module-level variables); the module is imported fresh for every evaluation and the three graphs are evaluated in sequence, so reset state when `it == 1`.
+
+  COMPUTATIONAL BUDGET:
+  - **Time limit**: 20 s wall-clock per graph, 75 s maximum total execution time.
+  - **Memory limit**: 2 GB.
+
+  KNOWN BASELINES:
+  - The starting rules (classic TabuCol: best non-tabu move, tenure 0.6 * |conflicting| + rand(10)) leave DSJC250.5 2 conflicts, le450_25c 6 conflicts, DSJC500.5 8 conflicts within the budget, fitness -5.333.
+  - The target colour counts are at, or 1-2 above, the best known for each graph, which were found by runs many times longer than this budget; reaching 0 conflicts on a target is a real result.
+  # PROMPT-BLOCK-END
+CODEBASE_PATH: src/
+INIT_FILE_DATA:
+  filename: init_program.py
+  language: python
+EVAL_FILE_NAME: evaluate.py
+BUDGET_CONFIG:
+  eval_timeout: 75
+  max_mem_bytes: 2000000000
+  resource_check_interval_s: 0.1
+EVOLVE_CONFIG:
+  fitness_key: fitness
+  num_epochs: 152
+  ckpt: 10
+  max_size: null
+  init_pop: 10
+  exploration_rate: 0.3
+  selection:
+    policy: roulette
+    kwargs:
+      roulette_by_rank: true
+  early_stopping_rounds: null
+  num_islands: 10
+  migration:
+    topology: ring
+    interval: 30
+    rate: 0.1
+  meta_prompting: true
+  use_map_elites: true
+  num_inspirations: 2
+  max_chat_depth: 3
+  markers:
+    mp_start_marker: '# PROMPT-BLOCK-START'
+    mp_end_marker: '# PROMPT-BLOCK-END'
+    evolve_start_marker: '# EVOLVE-BLOCK-START'
+    evolve_end_marker: '# EVOLVE-BLOCK-END'
+  exploration_scheduler:
+    type: PlateauScheduler
+    kwargs:
+      min_value: 0.2
+      max_value: 0.5
+      plateau_threshold: 5
+      increase_factor: 1.05
+      decrease_factor: 0.95
+MAP_ELITES:
+  elite_map_type: cvt
+  elite_map_kwargs:
+    num_centroids: 30
+    num_init_samples: 1000
+    max_iter: 300
+    tolerance: 0.0001
+  features:
+  - name: fitness
+    min_val: -30.0
+    max_val: 0.0
+  - name: eval_time
+    min_val: 0
+    max_val: 75
+EXPLORATION_ENSEMBLE:
+- model_name: MOCK
+EXPLOITATION_ENSEMBLE:
+- model_name: MOCK
+SAMPLER_AUX_LM:
+  model_name: MOCK

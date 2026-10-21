@@ -69,8 +69,7 @@ COMPUTATIONAL RESOURCES & IMPLEMENTATION GUIDELINES:
 **Core packages**: numpy and the Python standard library only. No file, network, subprocess or threading access.
 - Both rules are called once per iteration, {budget:,} times per graph; keep them vectorised (numpy over the `conflicting` rows) and avoid Python loops over all vertices or colours. The current select_move costs O(|conflicting| * k) per call.
 - Use only `rng` for randomness (never `random`, `numpy.random` or the clock); the evaluation must be reproducible.
-- You may keep state between calls (module-level variables, e.g. for reactive tenure or stagnation detection); the module is imported fresh for every evaluation and the three graphs are evaluated in sequence, so reset state when `it == 1`.
-- Ideas with a track record on these graphs: random tie-breaking among equal best moves, reactive or adaptive tenure (longer when stagnating), occasionally sampling a non-best move, restricting candidates to a subset of conflicting vertices, aspiration variants, diversification after many non-improving iterations, and moves that take the colour of the conflicting neighbour into account.
+- You may keep state between calls (module-level variables); the module is imported fresh for every evaluation and the three graphs are evaluated in sequence, so reset state when `it == 1`.
 
 COMPUTATIONAL BUDGET:
 - **Time limit**: {wall_cap:g} s wall-clock per graph, {eval_timeout} s maximum total execution time.
@@ -78,7 +77,7 @@ COMPUTATIONAL BUDGET:
 
 KNOWN BASELINES:
 - The starting rules (classic TabuCol: best non-tabu move, tenure 0.6 * |conflicting| + rand(10)) leave {base_rows} within the budget, fitness {baseline[0]['fitness']:.3f}.
-- The target colour counts are at, or 1-2 above, the best known for each graph, which were found by much longer runs of tabu search and memetic algorithms; reaching 0 conflicts on a target is a real result.
+- The target colour counts are at, or 1-2 above, the best known for each graph, which were found by runs many times longer than this budget; reaching 0 conflicts on a target is a real result.
 # PROMPT-BLOCK-END
 """
 

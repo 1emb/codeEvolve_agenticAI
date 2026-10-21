@@ -25,11 +25,14 @@ outputs and the instructions to reproduce the `gc_fixedk` experiment
   look like a large gain. The starting-rule-independent alternative is
   k = best known for every graph, at which the starting rules leave 2, 11 and
   27 conflicts.
-* **The system prompt contains hints written by the author.** The prompt in
-  `problem/gc_fixedk/config_qwen.yaml` lists ideas with a track record on these
-  graphs: reactive tenure, random tie-breaking, sampling non-best moves,
-  diversification. The LLM cannot ask for anything; it receives this prompt on
-  every call. The evolved program uses those ideas.
+* **Run1 used a system prompt with hints written by the author.** The prompt
+  listed ideas with a track record on these graphs (reactive tenure, random
+  tie-breaking, sampling non-best moves, diversification), and the evolved
+  program uses those ideas. The LLM cannot ask for anything; it receives the
+  prompt on every call. The hints have since been removed from the prompt
+  builder and from `problem/gc_fixedk/config_qwen.yaml`, so a new run starts
+  without them. The prompt run1 actually used is preserved unchanged in
+  `results/run1/config_qwen.yaml`. No run without hints has been made yet.
 * **The starting rules are the simplest textbook TabuCol:** best non-tabu move,
   tenure 0.6 x (number of conflicting vertices) + random(0..9). Stronger
   published variants add random tie-breaking and reactive tenure. Evolution
@@ -47,11 +50,6 @@ outputs and the instructions to reproduce the `gc_fixedk` experiment
   adapts the style of the Evolution of Heuristics paper (Liu et al., ICML 2024),
   which evaluated bin packing, TSP and flow shop, not graph colouring. We know of
   no published LLM-evolution result on DIMACS colouring to compare with.
-* **Two earlier whole-program runs are also in this repository** (their code is
-  in `code/`). DSJC125.5 run1 started from DSATUR greedy only and reached 21
-  colours vs 17 best known; gc_train3 run1 started from DSATUR + TabuCol and
-  reached 29/26/52 vs 28/25/47. The fixed-framework setup was chosen in
-  response to those results, which narrowed the research question.
 * **The best evolved program had three defects; corrected copies are provided.**
   It sampled from unseeded `numpy.random`, one branch was dead code, and
   `tenure()` overwrote a variable `select_move` depends on.
@@ -102,18 +100,17 @@ code/                            all problem code (nothing here is upstream Code
   init_hooks.py                  seed program: classic TabuCol rules
   evaluate_fixedk.py             evaluator CodeEvolve calls: python evaluate.py <prog.py> <out.json>
   scoring.py                     DIMACS reader + shared helpers
-  make_problem_fixedk.py         builds a problem directory + CodeEvolve config + system prompt
+  make_problem_fixedk.py         builds a problem directory + CodeEvolve config + system prompt (hint-free)
   calibrate_fixedk.py            runs seed rules at candidate k to pick target k per graph
   heldout_hooks.py               held-out test: colours used under a wall-clock limit
   run.sh                         launches CodeEvolve on a problem directory
   serve_qwen.sh                  starts the vLLM server
-  make_problem.py, evaluate.py, init_program.py      DSJC125.5 run1: whole program, seed = DSATUR only
-  make_problem_multi.py, evaluate_multi.py, init_tabucol.py   gc_train3 run1: whole program, seed = DSATUR + TabuCol
-                                     (neither is used by gc_fixedk)
+  make_problem.py                shared helpers: best-known table, graph download, yaml writer
 problem/gc_fixedk/               the assembled problem directory that was run
   input/evaluate.py, scoring.py, tabucol_framework.py, problem.json, graphs/*.col, src/init_program.py
-  config_qwen.yaml               CodeEvolve config incl. system prompt
+  config_qwen.yaml               CodeEvolve config incl. system prompt, regenerated without hints
 results/run1/
+  config_qwen.yaml               the config and system prompt run1 actually used (with the hints)
   best_overall.py                best evolved program (island 6), unchanged
   best_overall_rngfix.py         hand-corrected copy: randomness drawn from rng only
   best_overall_fixed.py          hand-corrected copy: all three defects fixed
@@ -154,7 +151,7 @@ export API_BASE=http://localhost:8000/v1 API_KEY=EMPTY
 Any OpenAI-compatible server works. Change `model_name` in
 `problem/gc_fixedk/config_qwen.yaml` if you use a different model.
 
-### 3.2 Build the problem (already done, output is `problem/gc_fixedk`)
+### 3.2 Build the problem (already done, output is `problem/gc_fixedk`; the builder now writes a prompt without hints)
 
 ```bash
 cd ~/codeEvolve/codeEv/problems/graph_coloring/common
@@ -341,10 +338,6 @@ from conflict counts only.
   is one colour on le450_25c. Everything else is within the one-colour
   run-to-run noise. Treat the training fitness as evidence of search power on
   one fixed trajectory, not as a better colouring heuristic.
-* **Compared with the earlier whole-program experiments** (DSJC125.5 alone:
-  21 colours vs 17 best known; three graphs with gap-percent fitness: 29/26/52
-  vs 28/25/47), the fixed-framework approach made better use of the LLM on its
-  own objective, but neither approach moved the colour counts.
 
 Defects found in the best evolved program (corrected copies in section 5.4):
 
@@ -361,18 +354,15 @@ Defects found in the best evolved program (corrected copies in section 5.4):
 The scored behaviour is what is in the original file, not what its comments
 describe.
 
+
 ## 7. Suggested next step
 
-The project owner's stated goal is to evolve a whole colouring program, not
-TabuCol rules. The gc_fixedk setup does not meet that goal and should be read
-as a pipeline test. A whole-program run needs a decision on the seed
-(DSATUR-only is closest to "from scratch"; DSATUR + TabuCol is more likely to
-reach best-known values), a budget-independent objective, and several hundred
-epochs.
+The next step is a whole-program run: the program receives a graph and a time
+limit and returns a colouring, with no target k prescribed. The gc_fixedk setup
+should be read as a pipeline test.
 
-For the fixed-framework setup itself:
-
-Evaluate each candidate on several seeded start colourings or two iteration
-budgets, so the rules cannot overfit one search trajectory, and add a
-reproducibility check (fail the evaluation if the program imports
-`numpy.random` or `random`).
+For the fixed-framework setup itself: evaluate each candidate on several seeded
+start colourings or two iteration budgets, so the rules cannot overfit one
+search trajectory; add a reproducibility check (fail the evaluation if the
+program imports `numpy.random` or `random`); and run with the hint-free prompt
+now produced by the builder.
