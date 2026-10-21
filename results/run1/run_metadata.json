@@ -1,0 +1,1058 @@
+{
+  "10": {
+    "elapsed_time": 1200.2393233776093,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -3.6666666666666665,
+      "iteration_found": 7,
+      "island_found": 9,
+      "depth": 1,
+      "eval_metrics": {
+        "fitness": -3.6666666666666665,
+        "score": [
+          1.0,
+          1.0,
+          9.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          1,
+          1,
+          9
+        ],
+        "solved_at": [
+          null,
+          null,
+          null
+        ],
+        "iters": [
+          200000,
+          200000,
+          200000
+        ],
+        "wall": [
+          4.17,
+          4.18,
+          5.62
+        ],
+        "status": [
+          "unsolved",
+          "unsolved",
+          "unsolved"
+        ],
+        "reason": [
+          "1 conflicting edges left at k=28 after 200,000 iterations (4.2s)",
+          "1 conflicting edges left at k=26 after 200,000 iterations (4.2s)",
+          "9 conflicting edges left at k=49 after 200,000 iterations (5.6s)"
+        ],
+        "budget": 200000,
+        "eval_time": 14.10896225401666
+      }
+    },
+    "early_stop_counter": 0
+  },
+  "20": {
+    "elapsed_time": 2134.746780395508,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -2.662805,
+      "iteration_found": 11,
+      "island_found": 0,
+      "depth": 3,
+      "eval_metrics": {
+        "fitness": -2.662805,
+        "score": [
+          1.0,
+          0.9884,
+          6.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          1,
+          0,
+          6
+        ],
+        "solved_at": [
+          null,
+          197683,
+          null
+        ],
+        "iters": [
+          200000,
+          197683,
+          200000
+        ],
+        "wall": [
+          4.67,
+          4.46,
+          6.46
+        ],
+        "status": [
+          "unsolved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "1 conflicting edges left at k=28 after 200,000 iterations (4.7s)",
+          "legal 26-colouring after 197,683 of 200,000 iterations (4.5s)",
+          "6 conflicting edges left at k=49 after 200,000 iterations (6.5s)"
+        ],
+        "budget": 200000,
+        "eval_time": 15.723419409012422
+      }
+    },
+    "early_stop_counter": 1
+  },
+  "30": {
+    "elapsed_time": 3188.633950948715,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -2.662805,
+      "iteration_found": 11,
+      "island_found": 0,
+      "depth": 3,
+      "eval_metrics": {
+        "fitness": -2.662805,
+        "score": [
+          1.0,
+          0.9884,
+          6.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          1,
+          0,
+          6
+        ],
+        "solved_at": [
+          null,
+          197683,
+          null
+        ],
+        "iters": [
+          200000,
+          197683,
+          200000
+        ],
+        "wall": [
+          4.67,
+          4.46,
+          6.46
+        ],
+        "status": [
+          "unsolved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "1 conflicting edges left at k=28 after 200,000 iterations (4.7s)",
+          "legal 26-colouring after 197,683 of 200,000 iterations (4.5s)",
+          "6 conflicting edges left at k=49 after 200,000 iterations (6.5s)"
+        ],
+        "budget": 200000,
+        "eval_time": 15.723419409012422
+      }
+    },
+    "early_stop_counter": 1
+  },
+  "40": {
+    "elapsed_time": 4203.730806350708,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -2.662805,
+      "iteration_found": 11,
+      "island_found": 0,
+      "depth": 3,
+      "eval_metrics": {
+        "fitness": -2.662805,
+        "score": [
+          1.0,
+          0.9884,
+          6.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          1,
+          0,
+          6
+        ],
+        "solved_at": [
+          null,
+          197683,
+          null
+        ],
+        "iters": [
+          200000,
+          197683,
+          200000
+        ],
+        "wall": [
+          4.67,
+          4.46,
+          6.46
+        ],
+        "status": [
+          "unsolved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "1 conflicting edges left at k=28 after 200,000 iterations (4.7s)",
+          "legal 26-colouring after 197,683 of 200,000 iterations (4.5s)",
+          "6 conflicting edges left at k=49 after 200,000 iterations (6.5s)"
+        ],
+        "budget": 200000,
+        "eval_time": 15.723419409012422
+      }
+    },
+    "early_stop_counter": 8
+  },
+  "50": {
+    "elapsed_time": 5177.691624403,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -2.662805,
+      "iteration_found": 11,
+      "island_found": 0,
+      "depth": 3,
+      "eval_metrics": {
+        "fitness": -2.662805,
+        "score": [
+          1.0,
+          0.9884,
+          6.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          1,
+          0,
+          6
+        ],
+        "solved_at": [
+          null,
+          197683,
+          null
+        ],
+        "iters": [
+          200000,
+          197683,
+          200000
+        ],
+        "wall": [
+          4.67,
+          4.46,
+          6.46
+        ],
+        "status": [
+          "unsolved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "1 conflicting edges left at k=28 after 200,000 iterations (4.7s)",
+          "legal 26-colouring after 197,683 of 200,000 iterations (4.5s)",
+          "6 conflicting edges left at k=49 after 200,000 iterations (6.5s)"
+        ],
+        "budget": 200000,
+        "eval_time": 15.723419409012422
+      }
+    },
+    "early_stop_counter": 0
+  },
+  "60": {
+    "elapsed_time": 6297.069345474243,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -2.5674566666666667,
+      "iteration_found": 55,
+      "island_found": 0,
+      "depth": 3,
+      "eval_metrics": {
+        "fitness": -2.5674566666666667,
+        "score": [
+          1.0,
+          0.7024,
+          6.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          1,
+          0,
+          6
+        ],
+        "solved_at": [
+          null,
+          140474,
+          null
+        ],
+        "iters": [
+          200000,
+          140474,
+          200000
+        ],
+        "wall": [
+          5.16,
+          3.44,
+          6.99
+        ],
+        "status": [
+          "unsolved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "1 conflicting edges left at k=28 after 200,000 iterations (5.2s)",
+          "legal 26-colouring after 140,474 of 200,000 iterations (3.4s)",
+          "6 conflicting edges left at k=49 after 200,000 iterations (7.0s)"
+        ],
+        "budget": 200000,
+        "eval_time": 15.719922123011202
+      }
+    },
+    "early_stop_counter": 0
+  },
+  "70": {
+    "elapsed_time": 7492.40348815918,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -2.5674566666666667,
+      "iteration_found": 55,
+      "island_found": 0,
+      "depth": 3,
+      "eval_metrics": {
+        "fitness": -2.5674566666666667,
+        "score": [
+          1.0,
+          0.7024,
+          6.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          1,
+          0,
+          6
+        ],
+        "solved_at": [
+          null,
+          140474,
+          null
+        ],
+        "iters": [
+          200000,
+          140474,
+          200000
+        ],
+        "wall": [
+          5.16,
+          3.44,
+          6.99
+        ],
+        "status": [
+          "unsolved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "1 conflicting edges left at k=28 after 200,000 iterations (5.2s)",
+          "legal 26-colouring after 140,474 of 200,000 iterations (3.4s)",
+          "6 conflicting edges left at k=49 after 200,000 iterations (7.0s)"
+        ],
+        "budget": 200000,
+        "eval_time": 15.719922123011202
+      }
+    },
+    "early_stop_counter": 8
+  },
+  "80": {
+    "elapsed_time": 8633.39201593399,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -2.5120400000000003,
+      "iteration_found": 72,
+      "island_found": 1,
+      "depth": 2,
+      "eval_metrics": {
+        "fitness": -2.5120400000000003,
+        "score": [
+          0.8156,
+          0.7205,
+          6.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          0,
+          0,
+          6
+        ],
+        "solved_at": [
+          163117,
+          144107,
+          null
+        ],
+        "iters": [
+          163117,
+          144107,
+          200000
+        ],
+        "wall": [
+          4.39,
+          3.75,
+          6.87
+        ],
+        "status": [
+          "solved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "legal 28-colouring after 163,117 of 200,000 iterations (4.4s)",
+          "legal 26-colouring after 144,107 of 200,000 iterations (3.7s)",
+          "6 conflicting edges left at k=49 after 200,000 iterations (6.9s)"
+        ],
+        "budget": 200000,
+        "eval_time": 15.144088894012384
+      }
+    },
+    "early_stop_counter": 7
+  },
+  "90": {
+    "elapsed_time": 9834.504140377045,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -2.5120400000000003,
+      "iteration_found": 72,
+      "island_found": 1,
+      "depth": 2,
+      "eval_metrics": {
+        "fitness": -2.5120400000000003,
+        "score": [
+          0.8156,
+          0.7205,
+          6.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          0,
+          0,
+          6
+        ],
+        "solved_at": [
+          163117,
+          144107,
+          null
+        ],
+        "iters": [
+          163117,
+          144107,
+          200000
+        ],
+        "wall": [
+          4.39,
+          3.75,
+          6.87
+        ],
+        "status": [
+          "solved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "legal 28-colouring after 163,117 of 200,000 iterations (4.4s)",
+          "legal 26-colouring after 144,107 of 200,000 iterations (3.7s)",
+          "6 conflicting edges left at k=49 after 200,000 iterations (6.9s)"
+        ],
+        "budget": 200000,
+        "eval_time": 15.144088894012384
+      }
+    },
+    "early_stop_counter": 17
+  },
+  "100": {
+    "elapsed_time": 10946.283496141434,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -2.3333333333333335,
+      "iteration_found": 96,
+      "island_found": 1,
+      "depth": 6,
+      "eval_metrics": {
+        "fitness": -2.3333333333333335,
+        "score": [
+          3.0,
+          1.0,
+          3.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          3,
+          1,
+          3
+        ],
+        "solved_at": [
+          null,
+          null,
+          null
+        ],
+        "iters": [
+          200000,
+          200000,
+          200000
+        ],
+        "wall": [
+          5.55,
+          5.34,
+          7.33
+        ],
+        "status": [
+          "unsolved",
+          "unsolved",
+          "unsolved"
+        ],
+        "reason": [
+          "3 conflicting edges left at k=28 after 200,000 iterations (5.5s)",
+          "1 conflicting edges left at k=26 after 200,000 iterations (5.3s)",
+          "3 conflicting edges left at k=49 after 200,000 iterations (7.3s)"
+        ],
+        "budget": 200000,
+        "eval_time": 18.35541041905526
+      }
+    },
+    "early_stop_counter": 2
+  },
+  "110": {
+    "elapsed_time": 12092.73853302002,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -2.3333333333333335,
+      "iteration_found": 96,
+      "island_found": 1,
+      "depth": 6,
+      "eval_metrics": {
+        "fitness": -2.3333333333333335,
+        "score": [
+          3.0,
+          1.0,
+          3.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          3,
+          1,
+          3
+        ],
+        "solved_at": [
+          null,
+          null,
+          null
+        ],
+        "iters": [
+          200000,
+          200000,
+          200000
+        ],
+        "wall": [
+          5.55,
+          5.34,
+          7.33
+        ],
+        "status": [
+          "unsolved",
+          "unsolved",
+          "unsolved"
+        ],
+        "reason": [
+          "3 conflicting edges left at k=28 after 200,000 iterations (5.5s)",
+          "1 conflicting edges left at k=26 after 200,000 iterations (5.3s)",
+          "3 conflicting edges left at k=49 after 200,000 iterations (7.3s)"
+        ],
+        "budget": 200000,
+        "eval_time": 18.35541041905526
+      }
+    },
+    "early_stop_counter": 2
+  },
+  "120": {
+    "elapsed_time": 13219.860356807709,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -2.1833666666666667,
+      "iteration_found": 117,
+      "island_found": 6,
+      "depth": 4,
+      "eval_metrics": {
+        "fitness": -2.1833666666666667,
+        "score": [
+          2.0,
+          0.5501,
+          4.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          2,
+          0,
+          4
+        ],
+        "solved_at": [
+          null,
+          110020,
+          null
+        ],
+        "iters": [
+          200000,
+          110020,
+          200000
+        ],
+        "wall": [
+          10.31,
+          4.95,
+          13.27
+        ],
+        "status": [
+          "unsolved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "2 conflicting edges left at k=28 after 200,000 iterations (10.3s)",
+          "legal 26-colouring after 110,020 of 200,000 iterations (5.0s)",
+          "4 conflicting edges left at k=49 after 200,000 iterations (13.3s)"
+        ],
+        "budget": 200000,
+        "eval_time": 28.66373096499592
+      }
+    },
+    "early_stop_counter": 1
+  },
+  "130": {
+    "elapsed_time": 14390.871987342834,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -1.7946933333333333,
+      "iteration_found": 126,
+      "island_found": 6,
+      "depth": 3,
+      "eval_metrics": {
+        "fitness": -1.7946933333333333,
+        "score": [
+          3.0,
+          0.3841,
+          2.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          3,
+          0,
+          2
+        ],
+        "solved_at": [
+          null,
+          76816,
+          null
+        ],
+        "iters": [
+          200000,
+          76816,
+          200000
+        ],
+        "wall": [
+          10.3,
+          3.23,
+          13.2
+        ],
+        "status": [
+          "unsolved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "3 conflicting edges left at k=28 after 200,000 iterations (10.3s)",
+          "legal 26-colouring after 76,816 of 200,000 iterations (3.2s)",
+          "2 conflicting edges left at k=49 after 200,000 iterations (13.2s)"
+        ],
+        "budget": 200000,
+        "eval_time": 26.86208509199787
+      }
+    },
+    "early_stop_counter": 3
+  },
+  "140": {
+    "elapsed_time": 15638.931244373322,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -1.7946933333333333,
+      "iteration_found": 126,
+      "island_found": 6,
+      "depth": 3,
+      "eval_metrics": {
+        "fitness": -1.7946933333333333,
+        "score": [
+          3.0,
+          0.3841,
+          2.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          3,
+          0,
+          2
+        ],
+        "solved_at": [
+          null,
+          76816,
+          null
+        ],
+        "iters": [
+          200000,
+          76816,
+          200000
+        ],
+        "wall": [
+          10.3,
+          3.23,
+          13.2
+        ],
+        "status": [
+          "unsolved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "3 conflicting edges left at k=28 after 200,000 iterations (10.3s)",
+          "legal 26-colouring after 76,816 of 200,000 iterations (3.2s)",
+          "2 conflicting edges left at k=49 after 200,000 iterations (13.2s)"
+        ],
+        "budget": 200000,
+        "eval_time": 26.86208509199787
+      }
+    },
+    "early_stop_counter": 13
+  },
+  "150": {
+    "elapsed_time": 16739.521770477295,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -1.7946933333333333,
+      "iteration_found": 126,
+      "island_found": 6,
+      "depth": 3,
+      "eval_metrics": {
+        "fitness": -1.7946933333333333,
+        "score": [
+          3.0,
+          0.3841,
+          2.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          3,
+          0,
+          2
+        ],
+        "solved_at": [
+          null,
+          76816,
+          null
+        ],
+        "iters": [
+          200000,
+          76816,
+          200000
+        ],
+        "wall": [
+          10.3,
+          3.23,
+          13.2
+        ],
+        "status": [
+          "unsolved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "3 conflicting edges left at k=28 after 200,000 iterations (10.3s)",
+          "legal 26-colouring after 76,816 of 200,000 iterations (3.2s)",
+          "2 conflicting edges left at k=49 after 200,000 iterations (13.2s)"
+        ],
+        "budget": 200000,
+        "eval_time": 26.86208509199787
+      }
+    },
+    "early_stop_counter": 5
+  },
+  "152": {
+    "elapsed_time": 16980.7839512825,
+    "cpu_count": 128,
+    "best_sol": {
+      "fitness": -1.7946933333333333,
+      "iteration_found": 126,
+      "island_found": 6,
+      "depth": 3,
+      "eval_metrics": {
+        "fitness": -1.7946933333333333,
+        "score": [
+          3.0,
+          0.3841,
+          2.0
+        ],
+        "instances": [
+          "DSJC250.5",
+          "le450_25c",
+          "DSJC500.5"
+        ],
+        "target_k": [
+          28,
+          26,
+          49
+        ],
+        "best_known": [
+          28,
+          25,
+          47
+        ],
+        "best_conflicts": [
+          3,
+          0,
+          2
+        ],
+        "solved_at": [
+          null,
+          76816,
+          null
+        ],
+        "iters": [
+          200000,
+          76816,
+          200000
+        ],
+        "wall": [
+          10.3,
+          3.23,
+          13.2
+        ],
+        "status": [
+          "unsolved",
+          "solved",
+          "unsolved"
+        ],
+        "reason": [
+          "3 conflicting edges left at k=28 after 200,000 iterations (10.3s)",
+          "legal 26-colouring after 76,816 of 200,000 iterations (3.2s)",
+          "2 conflicting edges left at k=49 after 200,000 iterations (13.2s)"
+        ],
+        "budget": 200000,
+        "eval_time": 26.86208509199787
+      }
+    },
+    "early_stop_counter": 1
+  }
+}

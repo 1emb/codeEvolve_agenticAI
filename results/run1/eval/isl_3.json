@@ -1,0 +1,55 @@
+{
+    "fitness": -3.6666666666666665,
+    "score": [
+        2.0,
+        1.0,
+        8.0
+    ],
+    "instances": [
+        "DSJC250.5",
+        "le450_25c",
+        "DSJC500.5"
+    ],
+    "target_k": [
+        28,
+        26,
+        49
+    ],
+    "best_known": [
+        28,
+        25,
+        47
+    ],
+    "best_conflicts": [
+        2,
+        1,
+        8
+    ],
+    "solved_at": [
+        null,
+        null,
+        null
+    ],
+    "iters": [
+        200000,
+        200000,
+        200000
+    ],
+    "wall": [
+        4.38,
+        4.16,
+        5.83
+    ],
+    "status": [
+        "unsolved",
+        "unsolved",
+        "unsolved"
+    ],
+    "reason": [
+        "2 conflicting edges left at k=28 after 200,000 iterations (4.4s)",
+        "1 conflicting edges left at k=26 after 200,000 iterations (4.2s)",
+        "8 conflicting edges left at k=49 after 200,000 iterations (5.8s)"
+    ],
+    "budget": 200000,
+    "eval_time": 14.562119658919983
+}

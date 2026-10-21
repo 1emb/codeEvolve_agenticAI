@@ -1,0 +1,18 @@
+Held-out test, 2026-10-21, decreasing-k wrapper, colours used (best known in parentheses)
+python heldout_hooks.py init_hooks.py best_overall.py --graphs ... --time-limit 10
+graph                 init_hooks.py    best_overall.py
+DSJC125.5                   17 (17)            17 (17)
+DSJC250.5                   29 (28)            29 (28)
+le450_25c                   28 (25)            27 (25)
+DSJC500.5                   51 (47)            52 (47)
+DSJC1000.5                  96 (82)            95 (82)
+queen8_8                      9 (9)              9 (9)
+myciel5                       6 (6)              6 (6)
+
+--time-limit 60
+DSJC125.5                   17 (17)            17 (17)
+DSJC250.5                   29 (28)            29 (28)
+le450_25c                   27 (25)            26 (25)
+DSJC500.5                   51 (47)            52 (47)
+DSJC1000.5                  93 (82)            93 (82)
+Note: best_overall.py calls np.random.choice unseeded, so these counts can vary by one between runs.

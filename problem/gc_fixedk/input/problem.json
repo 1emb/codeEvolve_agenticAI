@@ -1,0 +1,31 @@
+{
+  "name": "gc_fixedk",
+  "budget": 200000,
+  "wall_cap": 20.0,
+  "instances": [
+    {
+      "name": "DSJC250.5",
+      "file": "graphs/DSJC250.5.col",
+      "n": 250,
+      "m": 15668,
+      "best_known": 28,
+      "target_k": 28
+    },
+    {
+      "name": "le450_25c",
+      "file": "graphs/le450_25c.col",
+      "n": 450,
+      "m": 17343,
+      "best_known": 25,
+      "target_k": 26
+    },
+    {
+      "name": "DSJC500.5",
+      "file": "graphs/DSJC500.5.col",
+      "n": 500,
+      "m": 62624,
+      "best_known": 47,
+      "target_k": 49
+    }
+  ]
+}

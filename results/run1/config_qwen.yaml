@@ -1,0 +1,143 @@
+BUDGET_CONFIG:
+  eval_timeout: 75
+  max_mem_bytes: 2000000000
+  resource_check_interval_s: 0.1
+CODEBASE_PATH: src/
+EVAL_FILE_NAME: evaluate.py
+EVOLVE_CONFIG:
+  ckpt: 10
+  early_stopping_rounds: null
+  exploration_rate: 0.3
+  exploration_scheduler:
+    kwargs:
+      decrease_factor: 0.95
+      increase_factor: 1.05
+      max_value: 0.5
+      min_value: 0.2
+      plateau_threshold: 5
+    type: PlateauScheduler
+  fitness_key: fitness
+  init_pop: 10
+  markers:
+    evolve_end_marker: '# EVOLVE-BLOCK-END'
+    evolve_start_marker: '# EVOLVE-BLOCK-START'
+    mp_end_marker: '# PROMPT-BLOCK-END'
+    mp_start_marker: '# PROMPT-BLOCK-START'
+  max_chat_depth: 3
+  max_size: null
+  meta_prompting: true
+  migration:
+    interval: 30
+    rate: 0.1
+    topology: ring
+  num_epochs: 152
+  num_inspirations: 2
+  num_islands: 10
+  selection:
+    kwargs:
+      roulette_by_rank: true
+    policy: roulette
+  use_map_elites: true
+EXPLOITATION_ENSEMBLE:
+- max_tok: 8192
+  model_name: Qwen/Qwen3-Coder-30B-A3B-Instruct
+  retries: 3
+  temp: 0.7
+  top_p: 0.8
+  verify_ssl: false
+  weight: 1
+EXPLORATION_ENSEMBLE:
+- max_tok: 8192
+  model_name: Qwen/Qwen3-Coder-30B-A3B-Instruct
+  retries: 3
+  temp: 0.7
+  top_p: 0.8
+  verify_ssl: false
+  weight: 1
+INIT_FILE_DATA:
+  filename: init_program.py
+  language: python
+MAP_ELITES:
+  elite_map_kwargs:
+    max_iter: 300
+    num_centroids: 30
+    num_init_samples: 1000
+    tolerance: 0.0001
+  elite_map_type: cvt
+  features:
+  - max_val: 0.0
+    min_val: -30.0
+    name: fitness
+  - max_val: 75
+    min_val: 0
+    name: eval_time
+SAMPLER_AUX_LM:
+  max_tok: 8192
+  model_name: Qwen/Qwen3-Coder-30B-A3B-Instruct
+  retries: 3
+  temp: 0.7
+  top_p: 0.8
+  verify_ssl: false
+  weight: 1
+SYS_MSG: "# PROMPT-BLOCK-START\nYou are an expert in combinatorial optimization, metaheuristics,\
+  \ and graph coloring.\nYour mission is to design better decision rules for TabuCol,\
+  \ the tabu search that looks for a legal k-colouring of a graph (no edge with both\
+  \ endpoints the same colour) by repeatedly recolouring one conflicting vertex.\n\
+  \nPROBLEM CONTEXT:\n- **Task**: Improve the two rules the fixed TabuCol framework\
+  \ calls on every iteration:\n  * `select_move(gamma, col, conflicting, tabu_until,\
+  \ it, conflicts, best_conf, k, rng) -> (v, c)`: which conflicting vertex v to recolour,\
+  \ and to which colour c (c != col[v], 0 <= c < k).\n  * `tenure(n, k, num_conflicting,\
+  \ it, rng) -> int`: for how many iterations the reverted move (v back to its old\
+  \ colour) stays tabu.\n- **The framework (fixed, you cannot change it)** runs, for\
+  \ each training graph, at a fixed target number of colours k and a fixed budget\
+  \ of 200,000 iterations:\n```\n    gamma = zeros((n, k))                 # gamma[v,\
+  \ c] = number of neighbours of v with colour c\n    tabu_until = zeros((n, k)) \
+  \           # (v, c) is tabu while tabu_until[v, c] > it\n    for it in 1 .. budget:\n\
+  \        own = gamma[rows, col]            # conflicts each vertex is in\n     \
+  \   conflicting = vertices with own > 0\n        v, c = select_move(gamma, col,\
+  \ conflicting, tabu_until, it, conflicts, best_conf, k, rng)\n        conflicts\
+  \ += gamma[v, c] - gamma[v, col[v]]\n        recolour v to c; update gamma for v's\
+  \ neighbours\n        tabu_until[v, old_colour] = it + tenure(n, k, len(conflicting),\
+  \ it, rng)\n        if conflicts < best_conf: remember this colouring (best_conf\
+  \ = conflicts)\n        if conflicts == 0: stop, solved at iteration it\n```\n-\
+  \ **Inputs to select_move**: `gamma` int32 (n, k) with gamma[v, c] = number of neighbours\
+  \ of v having colour c; `col` int64 (n,) current colours; `conflicting` int64 array\
+  \ of vertices with at least one same-coloured neighbour; `tabu_until` int64 (n,\
+  \ k); `it` current iteration (from 1); `conflicts` current conflicting edges; `best_conf`\
+  \ fewest conflicts seen so far; `k`; `rng` a `random.Random`.\n- **Graph setup**:\
+  \ 3 DIMACS benchmark graphs (training set), one fixed-k search per graph:\n  * DSJC250.5:\
+  \ n = 250, m = 15668, best known k = 28, target k = 28\n  * le450_25c: n = 450,\
+  \ m = 17343, best known k = 25, target k = 26\n  * DSJC500.5: n = 500, m = 62624,\
+  \ best known k = 47, target k = 49\n  The start colouring is DSATUR with the surplus\
+  \ colour classes recoloured at random (seeded, identical for every program).\n\n\
+  EVALUATION:\n- **Per-graph score** (lower is better): if the search reaches 0 conflicts,\
+  \ score = iterations_used / 200,000 (a number in (0, 1], faster is better); otherwise\
+  \ score = number of conflicting edges left in the best colouring found (>= 1). A\
+  \ crash, an invalid move, or exceeding the 20 s wall-clock cap for one graph scores\
+  \ m + 1 (worse than any search).\n- **Fitness** (maximize): -mean(score) over the\
+  \ training graphs. 0.0 means every target was solved instantly. Higher (closer to\
+  \ 0) is better.\n- **best_conflicts**, **solved_at**, **iters**, **wall**, **status**,\
+  \ **reason**: per-graph details reported for every evaluation.\n- Scores are deterministic:\
+  \ same rules, same score, on any machine. Only improvements to the rules move the\
+  \ score.\n\nCOMPUTATIONAL RESOURCES & IMPLEMENTATION GUIDELINES:\n**Core packages**:\
+  \ numpy and the Python standard library only. No file, network, subprocess or threading\
+  \ access.\n- Both rules are called once per iteration, 200,000 times per graph;\
+  \ keep them vectorised (numpy over the `conflicting` rows) and avoid Python loops\
+  \ over all vertices or colours. The current select_move costs O(|conflicting| *\
+  \ k) per call.\n- Use only `rng` for randomness (never `random`, `numpy.random`\
+  \ or the clock); the evaluation must be reproducible.\n- You may keep state between\
+  \ calls (module-level variables, e.g. for reactive tenure or stagnation detection);\
+  \ the module is imported fresh for every evaluation and the three graphs are evaluated\
+  \ in sequence, so reset state when `it == 1`.\n- Ideas with a track record on these\
+  \ graphs: random tie-breaking among equal best moves, reactive or adaptive tenure\
+  \ (longer when stagnating), occasionally sampling a non-best move, restricting candidates\
+  \ to a subset of conflicting vertices, aspiration variants, diversification after\
+  \ many non-improving iterations, and moves that take the colour of the conflicting\
+  \ neighbour into account.\n\nCOMPUTATIONAL BUDGET:\n- **Time limit**: 20 s wall-clock\
+  \ per graph, 75 s maximum total execution time.\n- **Memory limit**: 2 GB.\n\nKNOWN\
+  \ BASELINES:\n- The starting rules (classic TabuCol: best non-tabu move, tenure\
+  \ 0.6 * |conflicting| + rand(10)) leave DSJC250.5 2 conflicts, le450_25c 6 conflicts,\
+  \ DSJC500.5 8 conflicts within the budget, fitness -5.333.\n- The target colour\
+  \ counts are at, or 1-2 above, the best known for each graph, which were found by\
+  \ much longer runs of tabu search and memetic algorithms; reaching 0 conflicts on\
+  \ a target is a real result.\n# PROMPT-BLOCK-END\n"
