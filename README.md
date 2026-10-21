@@ -9,47 +9,61 @@ outputs and the instructions to reproduce the `gc_fixedk` experiment
 * **The LLM did not invent a colouring algorithm.** It was given the classic
   TabuCol search (Hertz and de Werra, 1987) and could only rewrite its two
   decision rules, `select_move` and `tenure`. The search loop, start colouring,
-  data structures and stopping rule are fixed code the LLM never saw as editable.
-  The honest description of the result is "LLM-tuned TabuCol rules", not
-  "LLM-discovered heuristic".
-* **The training targets were calibrated to the seed.** The target k for each
-  graph was chosen with `code/calibrate_fixedk.py` as the smallest k at which
-  the seed rules fail by only 1 to 10 conflicts. This gives the search a usable
-  gradient, but it also means a small tweak to the seed looks like a large gain
-  on the training fitness. Training fitness is not comparable to any published
-  number.
-* **The LLM was given hints.** The system prompt in
-  `problem/gc_fixedk/config_qwen.yaml` lists known ideas (reactive tenure,
-  random tie-breaking, sampling non-best moves, diversification). The evolved
-  program uses those ideas. This is guidance from the literature, not discovery.
-* **The seed is a deliberately plain baseline.** It is the 1987 rule set without
-  random tie-breaking or reactive tenure. A properly tuned TabuCol would likely
-  match the evolved rules, so part of the measured gain comes from the seed
-  being weak.
-* **The gain does not transfer.** On the held-out test (section 5.2) the evolved
-  rules save one colour on one graph, lose one colour on another, and tie
-  elsewhere. In aggregate they are no better than the seed.
+  data structures and stopping rule are fixed code outside the editable block.
+  The accurate description of the result is "LLM-tuned TabuCol rules".
+* **The headline training score is the luckiest of eight random seeds.** The
+  best program scored -1.79 on the one seed the evolution used. Re-scored under
+  eight seeds it averages -3.82 (sd 1.08) against -5.63 (sd 0.68) for the
+  starting rules. The gain over the starting rules is real but about half the
+  size the single-seed number suggests. Details in section 5.4.
+* **How the target colour counts were chosen.** TabuCol needs a fixed k per
+  graph. The values used (28, 26, 49) are the smallest k at which the starting
+  rules fail by 1 to 10 conflicts in 200,000 iterations, measured with
+  `code/calibrate_fixedk.py` (section 5.5). The purpose was a starting point
+  that is neither already solved nor hopeless. The consequence is that the
+  targets depend on the starting rules, so a small change to those rules can
+  look like a large gain. The starting-rule-independent alternative is
+  k = best known for every graph, at which the starting rules leave 2, 11 and
+  27 conflicts.
+* **The system prompt contains hints written by the author.** The prompt in
+  `problem/gc_fixedk/config_qwen.yaml` lists ideas with a track record on these
+  graphs: reactive tenure, random tie-breaking, sampling non-best moves,
+  diversification. The LLM cannot ask for anything; it receives this prompt on
+  every call. The evolved program uses those ideas.
+* **The starting rules are the simplest textbook TabuCol:** best non-tabu move,
+  tenure 0.6 x (number of conflicting vertices) + random(0..9). Stronger
+  published variants add random tie-breaking and reactive tenure. Evolution
+  re-added such features, so part of the measured gain is recovering known
+  improvements rather than finding new ones.
+* **The gain barely transfers to colour counts.** On the held-out test
+  (section 5.2) the only difference consistent across runs is one colour on
+  le450_25c. Every other entry is within the one-colour run-to-run noise.
 * **Nothing here approaches the state of the art.** Best-known DIMACS values
   (47 on DSJC500.5, 82 on DSJC1000.5) come from memetic algorithms such as HEAD
-  running for hours in compiled code. This 60 s Python TabuCol lands at 52 and
-  93, at the bottom of the published range, with or without the evolved rules.
+  running for hours in compiled code. This 60 s Python TabuCol lands at 51 to 52
+  and 92 to 93, at the bottom of the published range, with or without the
+  evolved rules (section 5.3).
 * **The design was not taken from a published graph-colouring result.** It
   adapts the style of the Evolution of Heuristics paper (Liu et al., ICML 2024),
   which evaluated bin packing, TSP and flow shop, not graph colouring. We know of
   no published LLM-evolution result on DIMACS colouring to compare with.
-* **The two earlier whole-program runs were weaker still.** DSJC125.5 run1
-  started from DSATUR greedy only (the LLM added its own tabu search, reaching
-  21 colours vs 17 best known). gc_train3 run1 started from DSATUR + TabuCol
-  and reached 29/26/52 vs 28/25/47. The switch to the fixed-framework setup was
-  made because of those results, which narrowed the research question.
-* **The best evolved program has two defects** (section 6): it uses unseeded
-  `numpy.random` instead of the supplied `rng`, and one of its branches is dead
-  code. The scored behaviour is what is in the file, not what its comments say.
+* **Two earlier whole-program runs are also in this repository** (their code is
+  in `code/`). DSJC125.5 run1 started from DSATUR greedy only and reached 21
+  colours vs 17 best known; gc_train3 run1 started from DSATUR + TabuCol and
+  reached 29/26/52 vs 28/25/47. The fixed-framework setup was chosen in
+  response to those results, which narrowed the research question.
+* **The best evolved program had three defects; corrected copies are provided.**
+  It sampled from unseeded `numpy.random`, one branch was dead code, and
+  `tenure()` overwrote a variable `select_move` depends on.
+  `results/run1/best_overall_rngfix.py` fixes only the randomness and
+  `results/run1/best_overall_fixed.py` fixes all three. Neither scores better
+  (section 5.4). The original is kept unchanged as the record of what evolution
+  produced.
 
 What is solid: the pipeline runs end to end, the training evaluation is
 deterministic and independently verifies every reported colouring, every
 colour count in the held-out table is a verified conflict-free colouring, and
-every island beat the seed on the training objective.
+every island beat the starting rules on the evolution seed.
 
 ## 1. What the experiment does
 
@@ -100,13 +114,17 @@ problem/gc_fixedk/               the assembled problem directory that was run
   input/evaluate.py, scoring.py, tabucol_framework.py, problem.json, graphs/*.col, src/init_program.py
   config_qwen.yaml               CodeEvolve config incl. system prompt
 results/run1/
-  best_overall.py                best evolved program (island 6)
+  best_overall.py                best evolved program (island 6), unchanged
+  best_overall_rngfix.py         hand-corrected copy: randomness drawn from rng only
+  best_overall_fixed.py          hand-corrected copy: all three defects fixed
   island_<i>/best_sol.py         best program of each island
   island_<i>/best_prompt.txt     the prompt that produced it
   run_metadata.json              best solution at every checkpoint epoch
   run_history.log                start/finish stamps
   eval/init.json, eval/isl_<i>.json   evaluator output for the seed and every island best
-  heldout.txt                    held-out comparison seed vs evolved
+  eval/best_overall_*.json       evaluator output for the corrected copies
+  eval/seeds/<prog>_s<seed>.json evaluator output under 8 evaluation seeds (section 5.4)
+  heldout.txt                    held-out comparison, two runs
 data/dimacs/*.col                graphs used by the held-out test
 ```
 
@@ -210,71 +228,138 @@ Every island beat the seed. The global best improved at epochs 7, 11, 55, 72,
 
 ### 5.2 Held-out test (colours used by the decreasing-k wrapper, best known in parentheses)
 
+Second run of the test, with the corrected copies included. The first run is
+in `results/run1/heldout.txt`; it differs from this one by one colour on three
+entries, which is the run-to-run noise of a wall-clock-limited search. A
+difference of one colour below is not meaningful. The one difference that
+holds in both runs and every variant is le450_25c.
+
 ```
 time limit 10 s per graph
-graph              seed    evolved
-DSJC125.5  (17)      17         17
-DSJC250.5  (28)      29         29
-le450_25c  (25)      28         27
-DSJC500.5  (47)      51         52
-DSJC1000.5 (82)      96         95
-queen8_8    (9)       9          9
-myciel5     (6)       6          6
+graph              seed   evolved   rngfix   fixed
+DSJC125.5  (17)      17        18       17      17
+DSJC250.5  (28)      29        29       29      29
+le450_25c  (25)      28        27       27      26
+DSJC500.5  (47)      51        52       51      52
+DSJC1000.5 (82)      96        95       95      94
+queen8_8    (9)       9         9        9       9
+myciel5     (6)       6         6        6       6
 
 time limit 60 s per graph
-DSJC125.5  (17)      17         17
-DSJC250.5  (28)      29         29
-le450_25c  (25)      27         26
-DSJC500.5  (47)      51         52
-DSJC1000.5 (82)      93         93
+DSJC125.5  (17)      17        17       17      17
+DSJC250.5  (28)      29        29       29      29
+le450_25c  (25)      27        26       26      26
+DSJC500.5  (47)      51        52       51      51
+DSJC1000.5 (82)      93        92       92      92
 ```
 
-### 5.3 Against the state of the art (60 s per graph, verified conflict-free colourings)
+### 5.3 Against the state of the art (60 s per graph, verified conflict-free colourings, two runs)
 
-| graph      | best known | seed TabuCol | evolved rules | published range for other methods |
-|------------|------------|--------------|---------------|-----------------------------------|
-| DSJC125.5  | 17         | 17           | 17            | solved by everything              |
-| DSJC250.5  | 28         | 29           | 29            | 28 is routine for memetic methods |
-| le450_25c  | 25         | 27           | 26            | 25 for most memetic methods       |
-| DSJC500.5  | 47 (HEAD)  | 51           | 52            | 48 to 52                          |
-| DSJC1000.5 | 82 (HEAD)  | 93           | 93            | 82 to 94                          |
+| graph      | best known | seed TabuCol | evolved rules (all variants) | published range for other methods |
+|------------|------------|--------------|------------------------------|-----------------------------------|
+| DSJC125.5  | 17         | 17           | 17                           | solved by everything              |
+| DSJC250.5  | 28         | 29           | 29                           | 28 is routine for memetic methods |
+| le450_25c  | 25         | 27           | 26                           | 25 for most memetic methods       |
+| DSJC500.5  | 47 (HEAD)  | 51           | 51 to 52                     | 48 to 52                          |
+| DSJC1000.5 | 82 (HEAD)  | 93           | 92 to 93                     | 82 to 94                          |
 
 Sources: Moalic and Gondran, "The new memetic algorithm HEAD for graph
 coloring", EvoCOP 2015 / arXiv 1401.2184; Zheng et al., arXiv 2109.05948
 (notes that 47 on DSJC500.5 is reached only occasionally and with tuned
 parameters); comparison table in arXiv 2303.09632.
 
+### 5.4 Corrected copies and the effect of the evaluation seed
+
+The evolved program had three defects (listed in section 6). Two corrected
+copies are provided; the original is kept unchanged as the record of what
+evolution produced.
+
+* `best_overall_rngfix.py`: only the randomness is fixed (softmax sampling
+  draws from the supplied `rng`). Same move distribution as the original,
+  different random stream.
+* `best_overall_fixed.py`: all three defects fixed to the evident intent of
+  the code.
+
+Training fitness under eight evaluation seeds. Seed 0 is the one the evolution
+used; the evaluator was run with `evaluate.SEED` set to 0..7, which changes the
+start colouring and the random stream.
+
+| program                 | seed 0 | mean of 8 | sd   | range          | le450_25c solved at k=26 (of 8) |
+|-------------------------|--------|-----------|------|----------------|---------------------------------|
+| starting rules          | -5.33  | -5.63     | 0.68 | -6.67 to -4.67 | 0                               |
+| best evolved (original) | -1.79  | -3.82     | 1.08 | -5.00 to -1.79 | 5                               |
+| rngfix                  | -5.00  | -4.36     | 0.55 | -5.17 to -3.67 | 5 (and DSJC250.5 once)          |
+| fixed                   | -4.00  | -4.56     | 0.68 | -5.33 to -3.92 | 3                               |
+
+Reading:
+
+* The headline -1.79 is the best of the eight seeds for the original program
+  and the only seed the evolution ever scored. The same rules with a different
+  random stream (rngfix on seed 0) score -5.00.
+* Averaged over seeds the evolved rules beat the starting rules by about 1.8
+  fitness points, almost all of it from solving le450_25c at k = 26 in some
+  seeds. The worst evolved seed (-5.00) is about equal to the best
+  starting-rules seed (-4.67). The improvement is real but much smaller than
+  the single-seed number.
+* Fixing the logic defects does not improve the rules. The behaviour evolution
+  selected is the one with the defects in it.
+* Per-seed outputs are in `results/run1/eval/seeds/`.
+
+### 5.5 Starting rules at k = best known, +1, +2 (the calibration data)
+
+`python code/calibrate_fixedk.py --graphs DSJC250.5,le450_25c,DSJC500.5 --budget 200000 --span 2`
+
+| graph      | k = best known   | k + 1                 | k + 2                 |
+|------------|------------------|-----------------------|-----------------------|
+| DSJC250.5  | 28: 2 conflicts  | 29: solved at 177,231 | 30: solved at 16,519  |
+| le450_25c  | 25: 11 conflicts | 26: 6 conflicts       | 27: solved at 47,802  |
+| DSJC500.5  | 47: 27 conflicts | 48: 17 conflicts      | 49: 8 conflicts       |
+
+The targets used (28, 26, 49) are the lowest k per graph with 1 to 10
+conflicts left. Using k = best known everywhere would make the problem
+independent of the starting rules and the fitness would still be graded
+(2, 11, 27 conflicts), but reaching 0 conflicts on DSJC500.5 at k = 47 in
+200,000 iterations of plain TabuCol is unrealistic, so the signal would come
+from conflict counts only.
+
 ## 6. How to interpret the results
 
-* **The evolution worked on its own objective.** Fitness went from -5.33 to
-  -1.79. The best program solves le450_25c at k=26 (one above best known) in
-  77k of 200k iterations and leaves only 2 conflicts on DSJC500.5 at k=49.
-  The mechanisms it found are the ones the literature uses: adaptive tenure
-  that grows under stagnation, and switching to softmax or epsilon-greedy move
-  sampling after a long non-improving stretch.
+* **The evolution improved its own objective, by less than the headline
+  number.** On the seed it was scored with, fitness went from -5.33 to -1.79.
+  Averaged over eight seeds it went from -5.63 to -3.82. The mechanisms it
+  found are the ones the literature uses: adaptive tenure that grows under
+  stagnation, and switching to softmax or epsilon-greedy move sampling after a
+  long non-improving stretch.
+* **Single-seed evaluation let the search select on luck.** The best program's
+  score on the evolution seed is its best of eight seeds. Any future run should
+  average several seeds per evaluation.
 * **Different islands solved different graphs.** Island 2 cracked DSJC250.5 at
   k=28 (the best known value), islands 0, 4, 6, 7, 8, 9 cracked le450_25c at
   k=26, none cracked DSJC500.5. No single rule set solves all three, so the
   mean-score fitness is rewarding specialisation.
-* **Generalisation is weak.** On held-out graphs the evolved rules save one
-  colour on le450_25c, tie on the small graphs and on DSJC1000.5, and lose one
-  colour on DSJC500.5. The rules are tuned to one iteration budget and one
-  seeded start colouring, which is not what a time-limited decreasing-k search
-  needs. Treat the training fitness as evidence of search power, not as a
-  better colouring heuristic.
+* **Generalisation is weak.** On held-out graphs the only consistent difference
+  is one colour on le450_25c. Everything else is within the one-colour
+  run-to-run noise. Treat the training fitness as evidence of search power on
+  one fixed trajectory, not as a better colouring heuristic.
 * **Compared with the earlier whole-program experiments** (DSJC125.5 alone:
   21 colours vs 17 best known; three graphs with gap-percent fitness: 29/26/52
-  vs 28/25/47), the fixed-framework approach is clearly the better use of the
-  LLM.
+  vs 28/25/47), the fixed-framework approach made better use of the LLM on its
+  own objective, but neither approach moved the colour counts.
 
-Two defects in the best evolved program to keep in mind:
+Defects found in the best evolved program (corrected copies in section 5.4):
 
-1. It uses `np.random.choice` instead of the supplied `rng`. The evaluator seeds
-   numpy so training scores are reproducible, but `heldout_hooks.py` does not,
-   so held-out colour counts can differ by one between runs.
-2. The exploration flag compares `conflicts` with `_last_conflicts` after
-   overwriting the latter, so that branch never fires. The behaviour that was
-   scored is what is in the file, not what the comments claim.
+1. It sampled with `numpy.random.choice` instead of the supplied `rng`. The
+   evaluator seeds numpy, so the training score was reproducible, but only for
+   that one stream.
+2. The exploitation branch compared `conflicts` with `_last_conflicts` after
+   overwriting the latter, so it never fired.
+3. `tenure()` overwrote `_last_conflicts`, an edge count that `select_move`
+   uses for stagnation detection, with a vertex count, so the stagnation
+   counter in `select_move` was almost always reset. Found while fixing the
+   first two; not listed in the earlier version of this README.
+
+The scored behaviour is what is in the original file, not what its comments
+describe.
 
 ## 7. Suggested next step
 

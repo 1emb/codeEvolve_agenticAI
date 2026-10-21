@@ -16,3 +16,21 @@ le450_25c                   27 (25)            26 (25)
 DSJC500.5                   51 (47)            52 (47)
 DSJC1000.5                  93 (82)            93 (82)
 Note: best_overall.py calls np.random.choice unseeded, so these counts can vary by one between runs.
+
+Second run, 2026-10-21, with the corrected copies (rngfix = randomness fixed only; fixed = all three defects fixed)
+graph              seed   evolved   rngfix   fixed      (10 s per graph)
+DSJC125.5  (17)      17        18       17      17
+DSJC250.5  (28)      29        29       29      29
+le450_25c  (25)      28        27       27      26
+DSJC500.5  (47)      51        52       51      52
+DSJC1000.5 (82)      96        95       95      94
+queen8_8    (9)       9         9        9       9
+myciel5     (6)       6         6        6       6
+                                                   (60 s per graph)
+DSJC125.5  (17)      17        17       17      17
+DSJC250.5  (28)      29        29       29      29
+le450_25c  (25)      27        26       26      26
+DSJC500.5  (47)      51        52       51      51
+DSJC1000.5 (82)      93        92       92      92
+Run-to-run noise of this wall-clock-limited test is one colour. The only difference consistent across both runs
+and all variants is le450_25c, one colour better with the evolved rules.
