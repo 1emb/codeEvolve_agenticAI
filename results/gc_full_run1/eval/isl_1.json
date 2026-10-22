@@ -1,0 +1,64 @@
+{
+    "fitness": -26.753461668355285,
+    "mean_gap_pct": 26.753461668355285,
+    "all_valid": true,
+    "instances": [
+        "DSJC250.5",
+        "le450_25c",
+        "DSJC500.5"
+    ],
+    "best_known": [
+        28,
+        25,
+        47
+    ],
+    "seeds": [
+        0,
+        1,
+        2
+    ],
+    "k": [
+        [
+            35,
+            36,
+            36
+        ],
+        [
+            29,
+            29,
+            29
+        ],
+        [
+            63,
+            65,
+            65
+        ]
+    ],
+    "k_mean": [
+        35.67,
+        29.0,
+        64.33
+    ],
+    "gap_pct": [
+        27.381,
+        16.0,
+        36.879
+    ],
+    "time": [
+        9.028,
+        9.081,
+        9.215
+    ],
+    "status": [
+        "valid",
+        "valid",
+        "valid"
+    ],
+    "reason": [
+        "seed 0: valid 35-coloring in 9.051s; seed 1: valid 36-coloring in 9.013s; seed 2: valid 36-coloring in 9.019s",
+        "seed 0: valid 29-coloring in 9.045s; seed 1: valid 29-coloring in 9.125s; seed 2: valid 29-coloring in 9.071s",
+        "seed 0: valid 63-coloring in 9.131s; seed 1: valid 65-coloring in 9.048s; seed 2: valid 65-coloring in 9.468s"
+    ],
+    "time_limit_per_graph": 10.0,
+    "eval_time": 9.607448822935112
+}

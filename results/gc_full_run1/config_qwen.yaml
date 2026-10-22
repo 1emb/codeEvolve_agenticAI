@@ -1,0 +1,123 @@
+BUDGET_CONFIG:
+  eval_timeout: 120
+  max_mem_bytes: 4000000000
+  resource_check_interval_s: 0.1
+CODEBASE_PATH: src/
+EVAL_FILE_NAME: evaluate.py
+EVOLVE_CONFIG:
+  ckpt: 10
+  early_stopping_rounds: null
+  exploration_rate: 0.3
+  exploration_scheduler:
+    kwargs:
+      decrease_factor: 0.95
+      increase_factor: 1.05
+      max_value: 0.5
+      min_value: 0.2
+      plateau_threshold: 5
+    type: PlateauScheduler
+  fitness_key: fitness
+  init_pop: 10
+  markers:
+    evolve_end_marker: '# EVOLVE-BLOCK-END'
+    evolve_start_marker: '# EVOLVE-BLOCK-START'
+    mp_end_marker: '# PROMPT-BLOCK-END'
+    mp_start_marker: '# PROMPT-BLOCK-START'
+  max_chat_depth: 3
+  max_size: null
+  meta_prompting: true
+  migration:
+    interval: 30
+    rate: 0.1
+    topology: ring
+  num_epochs: 300
+  num_inspirations: 2
+  num_islands: 10
+  selection:
+    kwargs:
+      roulette_by_rank: true
+    policy: roulette
+  use_map_elites: true
+EXPLOITATION_ENSEMBLE:
+- max_tok: 8192
+  model_name: Qwen/Qwen3-Coder-30B-A3B-Instruct
+  retries: 3
+  temp: 0.7
+  top_p: 0.8
+  verify_ssl: false
+  weight: 1
+EXPLORATION_ENSEMBLE:
+- max_tok: 8192
+  model_name: Qwen/Qwen3-Coder-30B-A3B-Instruct
+  retries: 3
+  temp: 0.7
+  top_p: 0.8
+  verify_ssl: false
+  weight: 1
+INIT_FILE_DATA:
+  filename: init_program.py
+  language: python
+MAP_ELITES:
+  elite_map_kwargs:
+    max_iter: 300
+    num_centroids: 30
+    num_init_samples: 1000
+    tolerance: 0.0001
+  elite_map_type: cvt
+  features:
+  - max_val: 0.0
+    min_val: -40.0
+    name: fitness
+  - max_val: 120
+    min_val: 0
+    name: eval_time
+SAMPLER_AUX_LM:
+  max_tok: 8192
+  model_name: Qwen/Qwen3-Coder-30B-A3B-Instruct
+  retries: 3
+  temp: 0.7
+  top_p: 0.8
+  verify_ssl: false
+  weight: 1
+SYS_MSG: "# PROMPT-BLOCK-START\nYou are an expert in combinatorial optimization, metaheuristics,\
+  \ and graph coloring.\nYour mission is to design a novel and high-performing graph\
+  \ coloring algorithm: given an undirected graph, assign a color to every vertex\
+  \ so that no edge joins two vertices of the same color, using as few colors as possible\
+  \ within a fixed time budget.\n\nPROBLEM CONTEXT:\n- **Task**: Improve the program\
+  \ that defines `color_graph(n, edges, time_limit) -> list[int]`.\n- **Inputs**:\n\
+  \  * `n` (int): number of vertices, labelled 0..n-1.\n  * `edges` (list of (u, v)\
+  \ tuples): undirected edges, 0-indexed.\n  * `time_limit` (float): wall-clock budget\
+  \ in seconds for this call. The function MUST return before it elapses; returning\
+  \ late counts as a failure.\n- **Output**: a list of n integers, entry i is the\
+  \ color of vertex i. Any integer labels are allowed, only equality matters. Any\
+  \ edge whose endpoints share a color makes the result invalid.\n- **Graph setup**:\n\
+  \  * The program is evaluated on 3 DIMACS benchmark graphs (the training set), 10\
+  \ seconds per call:\n  * DSJC250.5: n = 250, m = 15668, best known k = 28\n  * le450_25c:\
+  \ n = 450, m = 17343, best known k = 25\n  * DSJC500.5: n = 500, m = 62624, best\
+  \ known k = 47\n  * Each graph is run 3 time(s) with evaluation seeds 0..2. Seed\
+  \ 0 passes the graph as given; every other seed passes an isomorphic copy (vertices\
+  \ relabelled at random, edge order shuffled). `random` and `numpy.random` are seeded\
+  \ with the seed before each call. A graph's gap is the mean over its runs, so a\
+  \ program must be good on average, not lucky once.\n  * Graphs of this family (random\
+  \ G(n, 0.5) and Leighton graphs) are hard.\n\nEVALUATION:\n- **Fitness** (maximize):\
+  \ negative of the mean percentage gap (%) to the best-known number of colors over\
+  \ the training graphs, i.e. -mean(100 * (k - best_known) / best_known). A fitness\
+  \ of 0.0 means the best-known coloring was matched on every graph. Higher (closer\
+  \ to 0) is better.\n- **mean_gap_pct**, **k** (colours used per graph, one entry\
+  \ per seed), **k_mean**, **gap_pct**, **time**, **status**, **reason**: per-graph\
+  \ details reported for every evaluation. An invalid coloring, crash, timeout or\
+  \ malformed output on any graph gets a gap far worse than any valid coloring.\n\
+  - **eval_time**: total execution time in seconds across all graphs.\n\nCOMPUTATIONAL\
+  \ RESOURCES & IMPLEMENTATION GUIDELINES:\n**Core packages**: numpy and the Python\
+  \ standard library only. No file, network or subprocess access, no multiprocessing.\n\
+  - Use the whole time budget: an algorithm that keeps improving until shortly before\
+  \ the deadline is expected. Check the clock regularly; leave a safety margin.\n\
+  - Prefer vectorized NumPy operations for the inner loop; pure-Python loops over\
+  \ all vertices and colors per iteration are slow.\n- `random` and `numpy.random`\
+  \ are seeded before each call, so the program is deterministic for reproducibility.\
+  \ Use them (not the clock) for any randomness.\n- Each call runs in its own single-threaded\
+  \ process with one CPU core.\n\nCOMPUTATIONAL BUDGET:\n- **Time limit**: 10 seconds\
+  \ per graph, 120 seconds maximum total execution time.\n- **Memory limit**: 4 GB\
+  \ for the whole evaluation (all calls together).\n\nKNOWN BASELINES:\n- The best\
+  \ known values were obtained by runs many times longer than the time limit here.\n\
+  # PROMPT-BLOCK-END\n"

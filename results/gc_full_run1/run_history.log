@@ -1,0 +1,6 @@
+[2026-10-21 16:57:50] RUN STARTED
+  inpt_dir=/home/grad24/mnguyen/codeEvolve/codeEv/problems/graph_coloring/gc_full/input, cfg_path=/home/grad24/mnguyen/codeEvolve/codeEv/problems/graph_coloring/gc_full/config_qwen.yaml, out_dir=/home/grad24/mnguyen/codeEvolve/experiments/graph_coloring/gc_full/run1, load_ckpt=0, num_islands=10
+
+[2026-10-21 23:38:48] RUN FINISHED
+  All islands completed successfully.
+

@@ -1,10 +1,13 @@
 # CodeEvolve for graph colouring
 
-Two experiments. Sections 0 to 7 cover the finished `gc_fixedk` run, in which
-the LLM could only edit two decision rules of a fixed TabuCol search (run
-finished 2026-10-21, 4 h 43 min, 10 islands, 152 epochs). Section 8 covers the
-`gc_full` run, in which the LLM edits the whole colouring program; it is in
-progress and has no results yet.
+Two experiments, both finished on 2026-10-21. Sections 0 to 7 cover the
+`gc_fixedk` run, in which the LLM could only edit two decision rules of a fixed
+TabuCol search (4 h 43 min, 10 islands, 152 epochs). Section 8 covers the
+`gc_full` run, in which the LLM edits the whole colouring program starting from
+a DSATUR greedy seed (6 h 41 min, 10 islands, 300 epochs). The short version:
+the hook-only run improved TabuCol's rules by a measurable but small amount;
+the whole-program run improved on DSATUR by one to three colours but produced a
+genetic algorithm that stays far behind plain TabuCol.
 
 ## 0. Read this first: what this experiment is and is not
 
@@ -130,6 +133,16 @@ results/run1/
   eval/best_overall_*.json       evaluator output for the corrected copies
   eval/seeds/<prog>_s<seed>.json evaluator output under 8 evaluation seeds (section 5.4)
   heldout.txt                    held-out comparison, two runs
+results/gc_full_run1/            experiment 2 run (section 8)
+  config_qwen.yaml               the config and hint-free system prompt the run used
+  best_overall.py                best evolved program (island 5), unchanged
+  island_<i>/best_sol.py         best program of each island
+  island_<i>/best_prompt.txt     the prompt that produced it
+  run_metadata.json              best solution at every checkpoint epoch
+  run_history.log                start/finish stamps
+  eval/init.json, eval/isl_<i>.json, eval/best_overall.json   evaluator output (re-scored after the run)
+  heldout.txt                    held-out comparison, 3 seeds, 10 s and 60 s
+  report.txt                     raw output of the post-run script (checkpoint table, re-scoring, held-out, program)
 data/dimacs/*.col                graphs used by the held-out test
 ```
 
@@ -365,8 +378,12 @@ describe.
 
 ## 7. Suggested next step
 
-The whole-program run is in progress; section 8 records its design. The
-gc_fixedk setup should be read as a pipeline test.
+The whole-program run (section 8) did not change the picture: from a greedy
+seed the LLM produced a genetic algorithm, not a local search, and it stays six
+colours behind TabuCol on DSJC250.5. The gc_fixedk setup should be read as a
+pipeline test. The obvious next whole-program run would start from
+`code/init_tabucol.py` instead of DSATUR, so that the search begins from a
+local-search program and can only be credited for improving one.
 
 For the fixed-framework setup itself: evaluate each candidate on several seeded
 start colourings or two iteration budgets, so the rules cannot overfit one
@@ -374,47 +391,145 @@ search trajectory; add a reproducibility check (fail the evaluation if the
 program imports `numpy.random` or `random`); and run with the hint-free prompt
 now produced by the builder.
 
-## 8. Experiment 2: whole-program evolution, `gc_full` run1 (in progress)
+## 8. Experiment 2: whole-program evolution, `gc_full` run1
 
-Launched 2026-10-21 at 17:00 MDT. No results yet. This section records the
-design before any result exists.
+Launched 2026-10-21 at 16:58 MDT, finished 23:38 MDT (6 h 41 min). 10 islands,
+300 epochs each, Qwen3-Coder-30B-A3B-Instruct via vLLM, same CodeEvolve
+settings as experiment 1 apart from the epoch count.
+
+### 8.1 Design
 
 What the LLM edits: the whole `color_graph(n, edges, time_limit)` function.
 Nothing about the algorithm is fixed.
 
 * **Starting program:** `code/init_program.py`, DSATUR greedy colouring only.
-  No tabu search, no local search of any kind. An earlier attempt from this
-  seed (not in this repository) reached 21 colours on DSJC125.5 against 17
-  best known, so matching the DSATUR + TabuCol reference below would already
-  be a success; reaching best-known values is unlikely.
-* **Prompt:** `problem/gc_full/config_qwen.yaml`, hint-free. It states the
+  No tabu search, no local search of any kind.
+* **Prompt:** `results/gc_full_run1/config_qwen.yaml`, hint-free. It states the
   contract, the graphs, the fitness and the limits, and names no algorithm.
 * **Training graphs and budget:** DSJC250.5, le450_25c, DSJC500.5, 10 s per
   call.
 * **Evaluation seeds:** every graph is run 3 times. Seed 0 passes the graph as
   given; seeds 1 and 2 pass an isomorphic copy (vertices relabelled at random,
-  edge order shuffled) and seed `random` and `numpy.random` accordingly. The
-  relabelling means a program with its own fixed random seed still gets three
-  different runs. A graph's gap is the mean over its 3 runs. This is the
-  response to the single-seed luck found in experiment 1 (section 5.4).
+  edge order shuffled) and seed `random` and `numpy.random` accordingly. A
+  graph's gap is the mean over its 3 runs. This is the response to the
+  single-seed luck found in experiment 1 (section 5.4).
 * **Fitness:** minus the mean over graphs of the percentage gap to the
   best-known colour count. 0 means best known matched everywhere. Invalid
   colourings, crashes and timeouts get gaps worse than any valid colouring.
-* **Search settings:** 10 islands, 300 epochs each, otherwise the CodeEvolve
-  settings of experiment 1 (see `problem/gc_full/config_qwen.yaml`).
 * **Evaluator:** `code/evaluate_multi.py`. The 9 runs of one evaluation
   execute in parallel single-threaded processes; CodeEvolve's limits are
   120 s CPU time and 4 GB for the whole evaluation.
 
-Baselines on this evaluator, colours per seed, best known in parentheses:
+### 8.2 Training objective
 
-| program                                            | fitness | DSJC250.5 (28) | le450_25c (25) | DSJC500.5 (47) |
-|----------------------------------------------------|---------|----------------|----------------|----------------|
-| DSATUR seed (`code/init_program.py`)               | -28.02  | 37 / 36 / 36   | 29 / 29 / 29   | 65 / 64 / 66   |
-| DSATUR + TabuCol reference (`code/init_tabucol.py`) | -8.50   | 29 / 29 / 29   | 28 / 28 / 28   | 51 / 52 / 52   |
+Fitness and colours per seed on the run's own evaluation (`run_metadata.json`),
+best known in parentheses:
 
-When the run ends, `code/heldout_program.py` runs the best program, the seed
-and the reference on DSJC125.5, DSJC250.5, le450_25c, DSJC500.5, DSJC1000.5,
-queen8_8 and myciel5 at 10 s and 60 s with 3 seeds and verifies every
-colouring. The results will be added here with the same kind of caveats as
-section 0.
+| program                                             | fitness | DSJC250.5 (28) | le450_25c (25) | DSJC500.5 (47) |
+|-----------------------------------------------------|---------|----------------|----------------|----------------|
+| DSATUR seed (`code/init_program.py`)                | -28.02  | 37 / 36 / 36   | 29 / 29 / 29   | 65 / 64 / 66   |
+| best evolved (island 5, iteration 70)               | -23.44  | 35 / 35 / 35   | 28 / 28 / 28   | 63 / 62 / 63   |
+| DSATUR + TabuCol reference (`code/init_tabucol.py`), not a seed | -8.50 | 29 / 29 / 29 | 28 / 28 / 28 | 51 / 52 / 52 |
+
+The global best moved three times: -24.15 at iteration 52 (island 5), -23.68
+at iteration 68 (island 4), -23.44 at iteration 70 (island 5). It did not move
+in the remaining 230 epochs.
+
+Every island's best program, re-scored after the run with the same evaluator
+(`results/gc_full_run1/eval/`):
+
+| island | fitness | DSJC250.5 | le450_25c | DSJC500.5 | note |
+|--------|---------|-----------|-----------|-----------|------|
+| 5 (global best) | -23.44 | 35 / 35 / 35 | 28 / 28 / 28 | 63 / 62 / 63 | |
+| 2 | -23.68 | 35 / 35 / 35 | 28 / 28 / 28 | 63 / 63 / 63 | finishes in 1.1 s |
+| 6 | -23.68 | 35 / 35 / 35 | 28 / 28 / 28 | 63 / 63 / 63 | finishes in 2.0 s |
+| 8 | -23.68 | 35 / 35 / 35 | 28 / 28 / 28 | 63 / 63 / 63 | |
+| 9 | -24.31 | 35 / 35 / 36 | 28 / 28 / 28 | 64 / 63 / 63 | finishes in 0.4 s |
+| 0 | -26.42 | 37 / 36 / 36 | 28 / 28 / 29 | 65 / 64 / 63 | |
+| 1 | -26.75 | 35 / 36 / 36 | 29 / 29 / 29 | 63 / 65 / 65 | |
+| 3, 7 | -28.02 | 37 / 36 / 36 | 29 / 29 / 29 | 65 / 64 / 66 | never beat the seed |
+| 4 | timeout | 35 / 35 / 35 | 28 / 28 / 28 | 63 / timeout / timeout | scored -23.68 during the run; overran 10 s on re-scoring |
+
+Three re-scorings of the best program gave DSJC250.5 seed-1 colour counts of
+35 (during the run), 37 and 40 (`report.txt` and `eval/best_overall.json`).
+The program runs a population loop until 90 % of the wall-clock budget, so how
+many generations it completes, and therefore its result, depends on machine
+load at the time. The training numbers above are the run's own and are not
+exactly reproducible. Experiment 1 did not have this problem because its
+budget was an iteration count.
+
+### 8.3 Held-out test (3 seeds, colours per seed, every count a verified conflict-free colouring)
+
+From `results/gc_full_run1/heldout.txt`.
+
+```
+10 s per graph        DSATUR seed     DSATUR+TabuCol ref     best evolved
+DSJC125.5  (17)       22/22/21        17/17/17               21/22/21
+DSJC250.5  (28)       37/36/36        29/29/29               35/35/35
+le450_25c  (25)       29/29/29        28/28/28               28/28/28
+DSJC500.5  (47)       65/64/66        51/52/52               63/62/63
+DSJC1000.5 (82)       115/113/116     96/96/96               TIMEOUT/113/114
+queen8_8    (9)       12/12/10        9/9/9                  11/11/10
+myciel5     (6)       6/6/6           6/6/6                  6/6/6
+
+60 s per graph
+DSJC125.5  (17)       22/22/21        17/17/17               20/21/21
+DSJC250.5  (28)       37/36/36        29/29/29               35/35/35
+le450_25c  (25)       29/29/29        27/28/28               28/28/28
+DSJC500.5  (47)       65/64/66        51/51/52               63/62/63
+DSJC1000.5 (82)       115/113/116     93/94/96               113/113/113
+```
+
+The evolved program beats its DSATUR seed by one to three colours on every
+graph except myciel5, and on le450_25c it equals the TabuCol reference.
+Everywhere else it is 4 to 20 colours behind TabuCol. Six times the budget
+(60 s) changes its result by at most one colour. On DSJC1000.5 at 10 s it
+returned after the deadline once (seed 0) and was scored as a failure.
+
+### 8.4 What the evolved program is
+
+`results/gc_full_run1/best_overall.py` (island 5, 299 lines, unchanged) is a
+genetic algorithm written in pure Python:
+
+* population of min(100, max(20, n/2)) individuals, each built by DSATUR with
+  random tie-breaking among equal-saturation vertices, each construction capped
+  at 10 % of the time budget;
+* fitness = number of conflicting edge ends + 100 x number of colours, computed
+  by a double loop over all adjacency lists for every individual in every
+  generation;
+* tournament selection (size 5), uniform crossover followed by up to 100
+  random conflict-repair steps, mutation that recolours one vertex with a colour
+  no neighbour uses or swaps two vertices' colours;
+* generations until 90 % of the budget or 100 generations without improvement,
+  then a local repair pass and a final pass that gives any still-conflicting
+  vertex a fresh colour, which is why every returned colouring is legal.
+
+It never allows a conflicting colouring to survive into the next generation
+with fewer colours, so it cannot do what TabuCol does (fix k below the current
+count and drive conflicts to zero). The most plausible source of its gain over
+plain DSATUR is the best-of-population randomised DSATUR construction; this was
+not tested separately. Islands 2, 6 and 9 reach almost the same colour counts
+in 0.4 to 2 s, so the population loop that fills the remaining 8 s contributes
+little.
+
+### 8.5 How to interpret experiment 2
+
+* **The LLM did not discover local search.** Given a greedy seed, a hint-free
+  prompt, 300 epochs and 10 islands, every island that improved on the seed
+  did so with randomised construction plus a genetic algorithm. None introduced
+  a tabu search, simulated annealing or any method that temporarily accepts
+  conflicts, which is what every strong colouring heuristic since 1987 does.
+* **The gain over the seed is real but small, and the seed was weak.** One to
+  three colours over DSATUR is what randomised DSATUR restarts give on their
+  own. Compared with the one-line-change reference (DSATUR followed by
+  TabuCol) the evolved program is 6 colours worse on DSJC250.5 and 17 to 20
+  worse on DSJC1000.5.
+* **The search stalled early.** The best program appeared at iteration 70 of
+  300 and 7 of the 10 islands converged on near-identical GA designs with the
+  same colour counts. Three-seed evaluation removed the single-seed luck of
+  experiment 1, but the wall-clock budget introduced load dependence instead
+  (section 8.2).
+* **Experiments 1 and 2 together.** Evolving two rules inside a fixed TabuCol
+  loop gave rules slightly better than the textbook ones. Evolving the whole
+  program from a greedy seed gave a program much worse than textbook TabuCol.
+  In both cases the search stayed inside the algorithm family of its seed.

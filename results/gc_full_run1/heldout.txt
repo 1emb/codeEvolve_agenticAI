@@ -1,0 +1,20 @@
+Held-out test, 2026-10-21 23:40, whole programs, 3 seeds (seed 0 = graph as given, seeds 1-2 = isomorphic copies), colours per seed, best known in parentheses
+python heldout_program.py init_program.py init_tabucol.py best_overall.py --graphs ... --time-limit 10 --seeds 3
+time limit 10 s per graph, seeds [0, 1, 2]; colours used per seed (best known in parentheses); every count is a verified conflict-free colouring
+graph                         /init_program.py                  /init_tabucol.py              run1/best_overall.py
+DSJC125.5                        22/22/21 (17)                     17/17/17 (17)                     21/22/21 (17)
+DSJC250.5                        37/36/36 (28)                     29/29/29 (28)                     35/35/35 (28)
+le450_25c                        29/29/29 (25)                     28/28/28 (25)                     28/28/28 (25)
+DSJC500.5                        65/64/66 (47)                     51/52/52 (47)                     63/62/63 (47)
+DSJC1000.5                    115/113/116 (82)                     96/96/96 (82)              TIMEOUT/113/114 (82)
+queen8_8                          12/12/10 (9)                         9/9/9 (9)                      11/11/10 (9)
+myciel5                              6/6/6 (6)                         6/6/6 (6)                         6/6/6 (6)
+
+time limit 60 s per graph, seeds [0, 1, 2]; colours used per seed (best known in parentheses); every count is a verified conflict-free colouring
+graph                         /init_program.py                  /init_tabucol.py              run1/best_overall.py
+DSJC125.5                        22/22/21 (17)                     17/17/17 (17)                     20/21/21 (17)
+DSJC250.5                        37/36/36 (28)                     29/29/29 (28)                     35/35/35 (28)
+le450_25c                        29/29/29 (25)                     27/28/28 (25)                     28/28/28 (25)
+DSJC500.5                        65/64/66 (47)                     51/51/52 (47)                     63/62/63 (47)
+DSJC1000.5                    115/113/116 (82)                     93/94/96 (82)                  113/113/113 (82)
+

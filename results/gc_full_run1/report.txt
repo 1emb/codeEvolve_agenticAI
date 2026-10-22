@@ -1,0 +1,344 @@
+gc_full run1 finished: Wed Oct 21 11:39:31 PM MDT 2026
+
+=== best solution per checkpoint epoch (from run_metadata.json) ===
+epoch   10: fitness   -28.020  found it 0 island 1  k [[37, 36, 36], [29, 29, 29], [65, 64, 66]]  status ['valid', 'valid', 'valid']
+epoch   20: fitness   -28.020  found it 0 island 1  k [[37, 36, 36], [29, 29, 29], [65, 64, 66]]  status ['valid', 'valid', 'valid']
+epoch   30: fitness   -28.020  found it 0 island 1  k [[37, 36, 36], [29, 29, 29], [65, 64, 66]]  status ['valid', 'valid', 'valid']
+epoch   40: fitness   -28.020  found it 0 island 1  k [[37, 36, 36], [29, 29, 29], [65, 64, 66]]  status ['valid', 'valid', 'valid']
+epoch   50: fitness   -28.020  found it 0 island 1  k [[37, 36, 36], [29, 29, 29], [65, 64, 66]]  status ['valid', 'valid', 'valid']
+epoch   60: fitness   -24.154  found it 52 island 5  k [[35, 35, 35], [28, 28, 28], [63, 64, 64]]  status ['valid', 'valid', 'valid']
+epoch   70: fitness   -23.681  found it 68 island 4  k [[35, 35, 35], [28, 28, 28], [63, 63, 63]]  status ['valid', 'valid', 'valid']
+epoch   80: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch   90: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  100: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  110: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  120: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  130: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  140: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  150: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  160: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  170: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  180: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  190: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  200: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  210: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  220: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  230: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  240: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  250: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  260: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  270: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  280: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  290: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+epoch  300: fitness   -23.444  found it 70 island 5  k [[35, 35, 35], [28, 28, 28], [63, 62, 63]]  status ['valid', 'valid', 'valid']
+BEST_ISLAND 5
+copied island_5/best_sol.py -> best_overall.py
+
+=== training evaluator: seed program vs best (3 seeds per graph) ===
+init_program.py {'fitness': -28.019925700776767, 'k': [[37, 36, 36], [29, 29, 29], [65, 64, 66]], 'gap_pct': [29.762, 16.0, 38.298], 'status': ['valid', 'valid', 'valid'], 'eval_time': 0.18546955799683928}
+best_overall.py {'fitness': -24.23809523809524, 'k': [[35, 37, 35], [28, 28, 28], [63, 62, 63]], 'gap_pct': [27.381, 12.0, 33.333], 'status': ['valid', 'valid', 'valid'], 'eval_time': 9.527542532072403}
+
+=== held-out, 10 s per graph, 3 seeds: DSATUR seed vs DSATUR+TabuCol reference vs best evolved ===
+time limit 10 s per graph, seeds [0, 1, 2]; colours used per seed (best known in parentheses); every count is a verified conflict-free colouring
+graph                         /init_program.py                  /init_tabucol.py              run1/best_overall.py
+DSJC125.5                        22/22/21 (17)                     17/17/17 (17)                     21/22/21 (17)
+DSJC250.5                        37/36/36 (28)                     29/29/29 (28)                     35/35/35 (28)
+le450_25c                        29/29/29 (25)                     28/28/28 (25)                     28/28/28 (25)
+DSJC500.5                        65/64/66 (47)                     51/52/52 (47)                     63/62/63 (47)
+DSJC1000.5                    115/113/116 (82)                     96/96/96 (82)              TIMEOUT/113/114 (82)
+queen8_8                          12/12/10 (9)                         9/9/9 (9)                      11/11/10 (9)
+myciel5                              6/6/6 (6)                         6/6/6 (6)                         6/6/6 (6)
+
+=== same, 60 s per graph ===
+time limit 60 s per graph, seeds [0, 1, 2]; colours used per seed (best known in parentheses); every count is a verified conflict-free colouring
+graph                         /init_program.py                  /init_tabucol.py              run1/best_overall.py
+DSJC125.5                        22/22/21 (17)                     17/17/17 (17)                     20/21/21 (17)
+DSJC250.5                        37/36/36 (28)                     29/29/29 (28)                     35/35/35 (28)
+le450_25c                        29/29/29 (25)                     27/28/28 (25)                     28/28/28 (25)
+DSJC500.5                        65/64/66 (47)                     51/51/52 (47)                     63/62/63 (47)
+DSJC1000.5                    115/113/116 (82)                     93/94/96 (82)                  113/113/113 (82)
+
+=== best evolved program (EVOLVE block) ===
+# EVOLVE-BLOCK-START
+import time
+import random
+import numpy as np
+
+
+def color_graph(n, edges, time_limit):
+    """Refined hybrid genetic algorithm with enhanced local search"""
+    start = time.perf_counter()
+    
+    # Build adjacency list
+    adj = [set() for _ in range(n)]
+    for u, v in edges:
+        adj[u].add(v)
+        adj[v].add(u)
+    
+    # Precompute useful statistics
+    degree = [len(a) for a in adj]
+    max_degree = max(degree) if degree else 0
+    avg_degree = sum(degree) / n if n > 0 else 0
+    
+    # Fitness function that penalizes conflicts and color count
+    def fitness(coloring):
+        conflicts = 0
+        for v in range(n):
+            for u in adj[v]:
+                if coloring[v] == coloring[u]:
+                    conflicts += 1
+        # Normalize conflicts and penalize high color count
+        color_count = len(set(coloring)) if coloring else 1
+        return conflicts + (color_count * 100)  # Penalty factor for colors
+    
+    # Create initial population using different strategies
+    def create_individual():
+        # Strategy 1: DSATUR-like approach
+        color = [-1] * n
+        seen = [set() for _ in range(n)]
+        uncolored = set(range(n))
+        
+        while uncolored:
+            candidates = list(uncolored)
+            # Shuffle to randomize tie-breaking
+            random.shuffle(candidates)
+            v = max(candidates, key=lambda x: (len(seen[x]), degree[x]))
+            c = 0
+            while c in seen[v]:
+                c += 1
+            color[v] = c
+            uncolored.remove(v)
+            for w in adj[v]:
+                seen[w].add(c)
+            if time.perf_counter() - start > time_limit * 0.1:
+                break
+        
+        # Fill any remaining uncolored vertices randomly
+        for v in range(n):
+            if color[v] < 0:
+                color[v] = random.randint(0, max_degree)
+        return color
+    
+    # Initialize population with diverse strategies
+    population_size = min(100, max(20, n // 2))
+    population = [create_individual() for _ in range(population_size)]
+    
+    # Evaluate initial population
+    fitness_scores = [fitness(individual) for individual in population]
+    best_individual = population[np.argmin(fitness_scores)][:] 
+    best_fitness = min(fitness_scores)
+    
+    # Crossover operator: Graph-aware uniform crossover
+    def crossover(parent1, parent2):
+        child = [-1] * n
+        for i in range(n):
+            # Prefer genes from parent with better fitness for this vertex
+            if random.random() < 0.5:
+                child[i] = parent1[i]
+            else:
+                child[i] = parent2[i]
+        
+        # Fix conflicts by applying local improvements
+        for _ in range(100):  # Limited iterations to avoid slowdown
+            if time.perf_counter() - start > time_limit * 0.8:
+                break
+            # Find conflicted vertex
+            conflicted = []
+            for v in range(n):
+                for u in adj[v]:
+                    if child[v] == child[u]:
+                        conflicted.append(v)
+                        break
+            if not conflicted:
+                break
+            v = random.choice(conflicted)
+            # Try to assign a valid color
+            used_colors = set()
+            for u in adj[v]:
+                used_colors.add(child[u])
+            available_colors = [c for c in range(max(child) + 1) if c not in used_colors]
+            if available_colors:
+                child[v] = random.choice(available_colors)
+        
+        return child
+    
+    # Mutation operator: Multiple mutation strategies
+    def mutate(individual):
+        # Try several types of mutations
+        if random.random() < 0.7:  # Standard mutation
+            # Change a random vertex color
+            v = random.randint(0, n - 1)
+            # Find a valid color (one not used by neighbors)
+            used_colors = set()
+            for u in adj[v]:
+                used_colors.add(individual[u])
+            available_colors = [c for c in range(max(individual) + 1) if c not in used_colors]
+            if available_colors:
+                individual[v] = random.choice(available_colors)
+            else:
+                # If no valid color, just pick a new color
+                individual[v] = random.randint(0, max(individual) + 10)
+        else:  # Structural mutation - swap colors of two vertices
+            v1, v2 = random.sample(range(n), 2)
+            individual[v1], individual[v2] = individual[v2], individual[v1]
+        
+        return individual
+    
+    # Enhanced local search for post-evolution refinement
+    def local_search_refinement(coloring):
+        # Try to improve the solution with local search
+        max_iterations = min(1000, max(500, n * 2))
+        iterations = 0
+        
+        while iterations < max_iterations and time.perf_counter() - start < time_limit * 0.95:
+            if time.perf_counter() - start > time_limit * 0.95:
+                break
+                
+            # Find a vertex with conflicts
+            conflicted_vertices = []
+            for v in range(n):
+                for u in adj[v]:
+                    if coloring[v] == coloring[u]:
+                        conflicted_vertices.append(v)
+                        break
+            
+            if not conflicted_vertices:
+                break
+                
+            v = random.choice(conflicted_vertices)
+            
+            # Try to find a better color
+            used_colors = set()
+            for u in adj[v]:
+                used_colors.add(coloring[u])
+            
+            # Get available colors
+            available_colors = [c for c in range(max(coloring) + 1) if c not in used_colors]
+            
+            if available_colors:
+                new_color = random.choice(available_colors)
+                old_color = coloring[v]
+                coloring[v] = new_color
+            else:
+                # If no valid color, try to reduce color count
+                # Find a color that appears most frequently and can be reduced
+                color_counts = {}
+                for c in coloring:
+                    color_counts[c] = color_counts.get(c, 0) + 1
+                
+                # Try to remap highest color numbers
+                max_color = max(coloring)
+                if max_color > 0:
+                    candidates = [v for v in range(n) if coloring[v] == max_color]
+                    if candidates:
+                        v_reassign = random.choice(candidates)
+                        # Find a color that's not used by neighbors
+                        used_by_neighbors = set()
+                        for u in adj[v_reassign]:
+                            used_by_neighbors.add(coloring[u])
+                        valid_colors = [c for c in range(max_color) if c not in used_by_neighbors]
+                        if valid_colors:
+                            coloring[v_reassign] = random.choice(valid_colors)
+            
+            iterations += 1
+        
+        return coloring
+    
+    # Main evolutionary loop
+    generations = 0
+    max_generations = 1000
+    stagnation_counter = 0
+    max_stagnation = 100
+    
+    while time.perf_counter() - start < time_limit * 0.9 and generations < max_generations:
+        # Selection: tournament selection
+        tournament_size = min(5, population_size // 2)
+        selected = []
+        for _ in range(population_size):
+            tournament = random.sample(list(zip(population, fitness_scores)), tournament_size)
+            winner = min(tournament, key=lambda x: x[1])
+            selected.append(winner[0][:])  # Copy the individual
+        
+        # Create new generation through crossover and mutation
+        new_population = []
+        for i in range(0, population_size, 2):
+            parent1 = selected[i]
+            parent2 = selected[min(i+1, population_size-1)]
+            
+            # Crossover
+            child1 = crossover(parent1, parent2)
+            child2 = crossover(parent2, parent1)
+            
+            # Mutation
+            mutate(child1)
+            mutate(child2)
+            
+            new_population.extend([child1, child2])
+        
+        # Keep only valid individuals (trim to population size)
+        population = new_population[:population_size]
+        
+        # Evaluate new population
+        fitness_scores = [fitness(individual) for individual in population]
+        current_best_idx = np.argmin(fitness_scores)
+        current_best_fitness = fitness_scores[current_best_idx]
+        
+        # Update global best
+        if current_best_fitness < best_fitness:
+            best_fitness = current_best_fitness
+            best_individual = population[current_best_idx][:]
+            stagnation_counter = 0
+        else:
+            stagnation_counter += 1
+        
+        # Early stopping if no improvement for too long
+        if stagnation_counter >= max_stagnation:
+            break
+            
+        generations += 1
+    
+    # Apply final refinement to the best individual
+    refined_solution = local_search_refinement(best_individual[:])
+    
+    # Ensure we have a valid coloring by applying final conflict resolution
+    final_solution = refined_solution[:]
+    max_final_iter = 1000
+    iter_count = 0
+    
+    while iter_count < max_final_iter and time.perf_counter() - start < time_limit * 0.98:
+        iter_count += 1
+        conflicts_found = False
+        for v in range(n):
+            for u in adj[v]:
+                if final_solution[v] == final_solution[u]:
+                    # Resolve conflict by finding a valid color
+                    used_colors = set()
+                    for neighbor in adj[v]:
+                        used_colors.add(final_solution[neighbor])
+                    available_colors = [c for c in range(max(final_solution) + 1) if c not in used_colors]
+                    if available_colors:
+                        final_solution[v] = random.choice(available_colors)
+                        conflicts_found = True
+                    else:
+                        # If no valid color, assign new color
+                        final_solution[v] = max(final_solution) + 1
+                        conflicts_found = True
+                    break
+            if conflicts_found:
+                break
+        
+        if not conflicts_found:
+            break
+    
+    # Reorder colors to be consecutive (0, 1, 2, ...)
+    color_map = {}
+    current_color = 0
+    for color in final_solution:
+        if color not in color_map:
+            color_map[color] = current_color
+            current_color += 1
+    
+    final_result = [color_map[c] for c in final_solution]
+    
+    return final_result
+# EVOLVE-BLOCK-END
